@@ -8,6 +8,8 @@ abstract final class AppRoutes {
   static const String about = '/about';
   static const String contact = '/contact';
 
+  static String caseStudy(String slug) => '/work/$slug';
+
   static const List<String> all = [
     home,
     services,

@@ -6,6 +6,7 @@ import '../../features/about/presentation/pages/about_page.dart';
 import '../../features/contact/presentation/pages/contact_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/services/presentation/pages/services_page.dart';
+import '../../features/work/presentation/pages/case_study_page.dart';
 import '../../features/work/presentation/pages/work_page.dart';
 import '../../shared/layout/page_shell.dart';
 import 'routes.dart';
@@ -49,6 +50,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               state: state,
               child: const WorkPage(),
             ),
+            routes: [
+              GoRoute(
+                path: ':slug',
+                name: 'case-study',
+                pageBuilder: (context, state) {
+                  final slug = state.pathParameters['slug'] ?? '';
+                  return _fadePage(
+                    state: state,
+                    child: CaseStudyPage(slug: slug),
+                  );
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: AppRoutes.about,

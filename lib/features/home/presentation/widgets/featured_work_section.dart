@@ -18,6 +18,7 @@ import '../../../../core/widgets/section_header.dart';
 
 class _CaseStudy {
   const _CaseStudy({
+    required this.slug,
     required this.name,
     required this.industry,
     required this.problem,
@@ -27,6 +28,7 @@ class _CaseStudy {
     required this.accent,
   });
 
+  final String slug;
   final String name;
   final String industry;
   final String problem;
@@ -42,6 +44,7 @@ class FeaturedWorkSection extends StatelessWidget {
 
   static const _cases = <_CaseStudy>[
     _CaseStudy(
+      slug: 'northside-clinic',
       name: 'Northside Clinic',
       industry: 'Healthcare',
       problem: 'Looked interchangeable online. Booking lived in phone tag.',
@@ -51,6 +54,7 @@ class FeaturedWorkSection extends StatelessWidget {
       accent: AppColors.accent,
     ),
     _CaseStudy(
+      slug: 'oven-and-oak',
       name: 'Oven & Oak',
       industry: 'Restaurant',
       problem: 'Beautiful room, forgettable digital presence, dead hours midweek.',
@@ -234,7 +238,7 @@ class _CaseCopy extends StatelessWidget {
         AppButton(
           label: 'View case study',
           size: AppButtonSize.sm,
-          onPressed: () => context.go(AppRoutes.work),
+          onPressed: () => context.go(AppRoutes.caseStudy(study.slug)),
         ),
       ],
     );

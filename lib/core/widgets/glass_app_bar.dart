@@ -107,7 +107,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                           _GlassNavLink(
                             label: item.label,
                             path: item.path,
-                            selected: location == item.path,
+                            selected: _isSelected(location, item.path),
                           ),
                           const SizedBox(width: AppSpacing.lg),
                         ],
@@ -142,6 +142,11 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
         .animate()
         .fadeIn(duration: 500.ms, curve: AppCurves.enter)
         .moveY(begin: -8, end: 0, duration: 500.ms, curve: AppCurves.enter);
+  }
+
+  static bool _isSelected(String location, String path) {
+    if (path == AppRoutes.home) return location == path;
+    return location == path || location.startsWith('$path/');
   }
 
   void _openMobileMenu(BuildContext context) {

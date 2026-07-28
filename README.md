@@ -35,6 +35,10 @@ All post-hero sections are implemented. Spec: [docs/HOMEPAGE_SECTIONS.md](docs/H
 
 Production notes: [docs/HOMEPAGE_IMPLEMENTATION.md](docs/HOMEPAGE_IMPLEMENTATION.md).
 
+## Case studies
+
+Premium case study system (Stripe/Linear × Apple): [docs/CASE_STUDY_SYSTEM.md](docs/CASE_STUDY_SYSTEM.md).
+
 ## Stack
 
 - Flutter (stable) · Material 3
