@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/animations/hover_effects.dart';
-import '../../core/constants/brand.dart';
 import '../../core/routing/routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -13,6 +13,8 @@ import '../../core/widgets/app_container.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/glass_app_bar.dart';
 import '../../core/widgets/reveal.dart';
+import '../../features/content/domain/site_config.dart';
+import '../../features/content/presentation/providers/content_providers.dart';
 
 /// Persistent site chrome — sticky glass nav + smooth scroll body + footer.
 class PageShell extends StatefulWidget {
@@ -85,15 +87,15 @@ class _PageShellState extends State<PageShell> {
   }
 }
 
-/// Premium colophon footer — brand gravity + utility.
-class AppFooter extends StatefulWidget {
+/// Premium colophon footer — driven by Footer + Settings config.
+class AppFooter extends ConsumerStatefulWidget {
   const AppFooter({super.key});
 
   @override
-  State<AppFooter> createState() => _AppFooterState();
+  ConsumerState<AppFooter> createState() => _AppFooterState();
 }
 
-class _AppFooterState extends State<AppFooter> {
+class _AppFooterState extends ConsumerState<AppFooter> {
   final _emailController = TextEditingController();
 
   @override
@@ -104,6 +106,8 @@ class _AppFooterState extends State<AppFooter> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = ref.watch(siteSettingsProvider);
+    final footer = settings.footer;
     final isDesktop = Responsive.isDesktop(context);
 
     return SectionLandmark(
@@ -127,7 +131,7 @@ class _AppFooterState extends State<AppFooter> {
                 Semantics(
                   header: true,
                   child: Text(
-                    Brand.name,
+                    settings.siteName,
                     style: AppTypography.displayHero.copyWith(
                       fontSize: Responsive.fluidFontSize(
                         context,
@@ -142,7 +146,7 @@ class _AppFooterState extends State<AppFooter> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  Brand.tagline,
+                  settings.tagline,
                   style: AppTypography.bodyLargeStyle,
                 ),
                 const SizedBox(height: AppSpacing.xxxl),
@@ -150,19 +154,41 @@ class _AppFooterState extends State<AppFooter> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Expanded(child: _FooterNav()),
-                      const Expanded(child: _FooterContact()),
+                      for (final column in footer.columns)
+                        Expanded(child: _FooterColumnView(column: column)),
                       Expanded(
-                        child: _FooterNewsletter(controller: _emailController),
+                        child: _FooterContact(
+                          email: settings.contactEmail,
+                          blurb: footer.contactBlurb,
+                        ),
                       ),
+                      if (footer.showNewsletter)
+                        Expanded(
+                          child: _FooterNewsletter(
+                            controller: _emailController,
+                            title: footer.newsletterTitle,
+                            blurb: footer.newsletterBlurb,
+                          ),
+                        ),
                     ],
                   )
                 else ...[
-                  const _FooterNav(),
-                  const SizedBox(height: AppSpacing.xxl),
-                  const _FooterContact(),
-                  const SizedBox(height: AppSpacing.xxl),
-                  _FooterNewsletter(controller: _emailController),
+                  for (final column in footer.columns) ...[
+                    _FooterColumnView(column: column),
+                    const SizedBox(height: AppSpacing.xxl),
+                  ],
+                  _FooterContact(
+                    email: settings.contactEmail,
+                    blurb: footer.contactBlurb,
+                  ),
+                  if (footer.showNewsletter) ...[
+                    const SizedBox(height: AppSpacing.xxl),
+                    _FooterNewsletter(
+                      controller: _emailController,
+                      title: footer.newsletterTitle,
+                      blurb: footer.newsletterBlurb,
+                    ),
+                  ],
                 ],
                 const SizedBox(height: AppSpacing.xxxl),
                 const Divider(color: AppColors.border),
@@ -172,21 +198,21 @@ class _AppFooterState extends State<AppFooter> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '© ${DateTime.now().year} ${Brand.legalName}',
+                            '© ${DateTime.now().year} ${settings.legalName}',
                             style: AppTypography.captionStyle,
                           ),
                           const SizedBox(height: AppSpacing.md),
-                          const _SocialLinks(),
+                          _SocialLinks(socials: footer.socials),
                         ],
                       )
                     : Row(
                         children: [
                           Text(
-                            '© ${DateTime.now().year} ${Brand.legalName}. All rights reserved.',
+                            '© ${DateTime.now().year} ${settings.legalName}. All rights reserved.',
                             style: AppTypography.captionStyle,
                           ),
                           const Spacer(),
-                          const _SocialLinks(),
+                          _SocialLinks(socials: footer.socials),
                         ],
                       ),
               ],
@@ -198,8 +224,10 @@ class _AppFooterState extends State<AppFooter> {
   }
 }
 
-class _FooterNav extends StatelessWidget {
-  const _FooterNav();
+class _FooterColumnView extends StatelessWidget {
+  const _FooterColumnView({required this.column});
+
+  final FooterColumn column;
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +235,7 @@ class _FooterNav extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Navigate',
+          column.title,
           style: AppTypography.captionStyle.copyWith(
             fontWeight: FontWeight.w600,
             letterSpacing: 1.1,
@@ -215,7 +243,7 @@ class _FooterNav extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        for (final item in AppNav.primary) ...[
+        for (final item in column.links) ...[
           Semantics(
             button: true,
             label: item.label,
@@ -240,7 +268,13 @@ class _FooterNav extends StatelessWidget {
 }
 
 class _FooterContact extends StatelessWidget {
-  const _FooterContact();
+  const _FooterContact({
+    required this.email,
+    required this.blurb,
+  });
+
+  final String email;
+  final String blurb;
 
   @override
   Widget build(BuildContext context) {
@@ -258,11 +292,11 @@ class _FooterContact extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         Semantics(
           link: true,
-          label: 'Email hello@stepzero.studio',
+          label: 'Email $email',
           child: HoverOpacity(
             onTap: () => context.go(AppRoutes.contact),
             child: Text(
-              'hello@stepzero.studio',
+              email,
               style: AppTypography.bodyStyle.copyWith(
                 color: AppColors.textPrimary,
                 fontSize: 16,
@@ -271,19 +305,22 @@ class _FooterContact extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
-        Text(
-          'Book a discovery call',
-          style: AppTypography.smallStyle,
-        ),
+        Text(blurb, style: AppTypography.smallStyle),
       ],
     );
   }
 }
 
 class _FooterNewsletter extends StatelessWidget {
-  const _FooterNewsletter({required this.controller});
+  const _FooterNewsletter({
+    required this.controller,
+    required this.title,
+    required this.blurb,
+  });
 
   final TextEditingController controller;
+  final String title;
+  final String blurb;
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +328,7 @@ class _FooterNewsletter extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Newsletter',
+          title,
           style: AppTypography.captionStyle.copyWith(
             fontWeight: FontWeight.w600,
             letterSpacing: 1.1,
@@ -299,10 +336,7 @@ class _FooterNewsletter extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        Text(
-          'Operator notes. No spam.',
-          style: AppTypography.smallStyle,
-        ),
+        Text(blurb, style: AppTypography.smallStyle),
         const SizedBox(height: AppSpacing.md),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -333,22 +367,23 @@ class _FooterNewsletter extends StatelessWidget {
 }
 
 class _SocialLinks extends StatelessWidget {
-  const _SocialLinks();
+  const _SocialLinks({required this.socials});
+
+  final List<SocialLink> socials;
 
   @override
   Widget build(BuildContext context) {
-    const links = ['Instagram', 'LinkedIn', 'X'];
     return Wrap(
       spacing: AppSpacing.lg,
       children: [
-        for (final link in links)
+        for (final link in socials)
           Semantics(
             link: true,
-            label: link,
+            label: link.label,
             child: HoverOpacity(
               onTap: () {},
               child: Text(
-                link,
+                link.label,
                 style: AppTypography.captionStyle.copyWith(
                   color: AppColors.textSecondary,
                   fontWeight: FontWeight.w500,

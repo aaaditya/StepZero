@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/curves.dart';
@@ -13,124 +14,85 @@ import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/app_container.dart';
 import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../content/domain/models.dart';
+import '../../../content/presentation/providers/content_providers.dart';
 
-class _Insight {
-  const _Insight({
-    required this.title,
-    required this.dek,
-    required this.tag,
-    required this.readTime,
-    required this.featured,
-    required this.tone,
-  });
-
-  final String title;
-  final String dek;
-  final String tag;
-  final String readTime;
-  final bool featured;
-  final Color tone;
-}
-
-/// Editorial magazine layout — thinking as a trust product.
-class InsightsSection extends StatelessWidget {
+/// Editorial magazine layout — sourced from Articles catalog.
+class InsightsSection extends ConsumerWidget {
   const InsightsSection({super.key});
 
-  static const _insights = <_Insight>[
-    _Insight(
-      title: 'Brand before traffic: why ads fail unclear businesses',
-      dek: 'Acquisition amplifies what already exists. If identity is fuzzy, spend just buys confusion faster.',
-      tag: 'Strategy',
-      readTime: '6 min',
-      featured: true,
-      tone: AppColors.accent,
-    ),
-    _Insight(
-      title: 'The QR menu is a brand surface',
-      dek: 'Menus are not PDFs. They’re conversion products sitting in every guest’s hand.',
-      tag: 'Digital',
-      readTime: '4 min',
-      featured: false,
-      tone: Color(0xFF0F766E),
-    ),
-    _Insight(
-      title: 'Automation that still feels human',
-      dek: 'WhatsApp and AI should remove friction — never the warmth that made someone choose you.',
-      tag: 'Automation',
-      readTime: '5 min',
-      featured: false,
-      tone: Color(0xFFB45309),
-    ),
-  ];
-
   @override
-  Widget build(BuildContext context) {
-    final featured = _insights.firstWhere((e) => e.featured);
-    final latest = _insights.where((e) => !e.featured).toList();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final articles = ref.watch(articlesProvider);
+    final featured = articles.firstWhere(
+      (e) => e.featured,
+      orElse: () => articles.first,
+    );
+    final latest = articles.where((e) => e.slug != featured.slug).toList();
     final isDesktop = Responsive.isDesktop(context);
 
     return SectionLandmark(
       label: 'Insights',
       child: SectionContainer(
-      maxWidth: 1200,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SectionHeader(
-            eyebrow: 'Insights',
-            title: 'Thinking you can try before you buy.',
-            subtitle:
-                'Short essays for operators who want clarity — not content factories.',
-            action: Responsive.isDesktop(context)
-                ? TextButton(
-                    onPressed: () {},
-                    child: const Text('View all insights →'),
-                  )
-                : null,
-          ),
-          const SizedBox(height: AppSpacing.xxxl),
-          if (isDesktop)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 7,
-                  child: _FeaturedInsightCard(insight: featured),
-                ),
-                const SizedBox(width: AppSpacing.xl),
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < latest.length; i++) ...[
-                        _InsightRow(insight: latest[i], index: i),
-                        if (i != latest.length - 1)
-                          const SizedBox(height: AppSpacing.md),
-                      ],
-                    ],
+        maxWidth: 1200,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SectionHeader(
+              eyebrow: 'Insights',
+              title: 'Thinking you can try before you buy.',
+              subtitle:
+                  'Short essays for operators who want clarity — not content factories.',
+              action: Responsive.isDesktop(context)
+                  ? TextButton(
+                      onPressed: () => context.go(AppRoutes.articles),
+                      child: const Text('View all insights →'),
+                    )
+                  : null,
+            ),
+            const SizedBox(height: AppSpacing.xxxl),
+            if (isDesktop)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 7,
+                    child: _FeaturedInsightCard(article: featured),
                   ),
-                ),
+                  const SizedBox(width: AppSpacing.xl),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      children: [
+                        for (var i = 0; i < latest.length; i++) ...[
+                          _InsightRow(article: latest[i], index: i),
+                          if (i != latest.length - 1)
+                            const SizedBox(height: AppSpacing.md),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            else ...[
+              _FeaturedInsightCard(article: featured),
+              const SizedBox(height: AppSpacing.lg),
+              for (var i = 0; i < latest.length; i++) ...[
+                _InsightRow(article: latest[i], index: i),
+                if (i != latest.length - 1) const SizedBox(height: AppSpacing.md),
               ],
-            )
-          else ...[
-            _FeaturedInsightCard(insight: featured),
-            const SizedBox(height: AppSpacing.lg),
-            for (var i = 0; i < latest.length; i++) ...[
-              _InsightRow(insight: latest[i], index: i),
-              if (i != latest.length - 1) const SizedBox(height: AppSpacing.md),
             ],
           ],
-        ],
-      ),
+        ),
       ),
     );
   }
 }
 
 class _FeaturedInsightCard extends StatefulWidget {
-  const _FeaturedInsightCard({required this.insight});
+  const _FeaturedInsightCard({required this.article});
 
-  final _Insight insight;
+  final Article article;
 
   @override
   State<_FeaturedInsightCard> createState() => _FeaturedInsightCardState();
@@ -141,14 +103,15 @@ class _FeaturedInsightCardState extends State<_FeaturedInsightCard> {
 
   @override
   Widget build(BuildContext context) {
-    final insight = widget.insight;
+    final article = widget.article;
+    final tone = Color(article.tone);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () => context.go(AppRoutes.article(article.slug)),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 260),
           curve: AppCurves.hover,
@@ -173,9 +136,9 @@ class _FeaturedInsightCardState extends State<_FeaturedInsightCard> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        insight.tone.withValues(alpha: _hovered ? 0.28 : 0.18),
+                        tone.withValues(alpha: _hovered ? 0.28 : 0.18),
                         AppColors.surfaceMuted,
-                        insight.tone.withValues(alpha: 0.08),
+                        tone.withValues(alpha: 0.08),
                       ],
                     ),
                   ),
@@ -210,19 +173,19 @@ class _FeaturedInsightCardState extends State<_FeaturedInsightCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${insight.tag} · ${insight.readTime}',
+                      '${article.tag} · ${article.readTime}',
                       style: AppTypography.captionStyle.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      insight.title,
+                      article.title,
                       style: AppTypography.headingSStyle.copyWith(fontSize: 26),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      insight.dek,
+                      article.dek,
                       style: AppTypography.bodyStyle.copyWith(fontSize: 16),
                     ),
                     const SizedBox(height: AppSpacing.lg),
@@ -247,9 +210,9 @@ class _FeaturedInsightCardState extends State<_FeaturedInsightCard> {
 }
 
 class _InsightRow extends StatefulWidget {
-  const _InsightRow({required this.insight, required this.index});
+  const _InsightRow({required this.article, required this.index});
 
-  final _Insight insight;
+  final Article article;
   final int index;
 
   @override
@@ -261,14 +224,15 @@ class _InsightRowState extends State<_InsightRow> {
 
   @override
   Widget build(BuildContext context) {
-    final insight = widget.insight;
+    final article = widget.article;
+    final tone = Color(article.tone);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => context.go(AppRoutes.home),
+        onTap: () => context.go(AppRoutes.article(article.slug)),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 220),
           padding: const EdgeInsets.all(AppSpacing.lg),
@@ -286,7 +250,7 @@ class _InsightRowState extends State<_InsightRow> {
                   borderRadius: AppRadius.mdAll,
                   gradient: LinearGradient(
                     colors: [
-                      insight.tone.withValues(alpha: 0.25),
+                      tone.withValues(alpha: 0.25),
                       AppColors.surfaceMuted,
                     ],
                   ),
@@ -298,12 +262,12 @@ class _InsightRowState extends State<_InsightRow> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${insight.tag} · ${insight.readTime}',
+                      '${article.tag} · ${article.readTime}',
                       style: AppTypography.captionStyle,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      insight.title,
+                      article.title,
                       style: AppTypography.bodyStrong.copyWith(fontSize: 16),
                     ),
                   ],

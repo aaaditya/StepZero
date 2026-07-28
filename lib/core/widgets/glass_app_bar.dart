@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/content/domain/site_config.dart';
+import '../../features/content/presentation/providers/content_providers.dart';
 import '../animations/hover_effects.dart';
-import '../constants/brand.dart';
 import '../constants/curves.dart';
 import '../constants/durations.dart';
 import '../routing/routes.dart';
@@ -16,11 +18,8 @@ import '../utils/responsive.dart';
 import 'app_button.dart';
 import 'app_container.dart';
 
-/// Sticky glass navigation bar — reusable chrome for marketing surfaces.
-///
-/// Elevates opacity/blur after scroll for WCAG-friendly contrast while
-/// keeping the hero immersive at rest.
-class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
+/// Sticky glass navigation bar — driven by [SiteSettings] Navigation config.
+class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const GlassAppBar({
     required this.location,
     this.scrolled = false,
@@ -38,7 +37,9 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(height);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(siteSettingsProvider);
+    final nav = settings.navigation.primary;
     final isDesktop = Responsive.isDesktop(context);
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
 
@@ -89,11 +90,11 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                     children: [
                       Semantics(
                         button: true,
-                        label: '${Brand.name} home',
+                        label: '${settings.siteName} home',
                         child: HoverOpacity(
                           onTap: () => context.go(AppRoutes.home),
                           child: Text(
-                            Brand.name,
+                            settings.siteName,
                             style: AppTypography.headingSStyle.copyWith(
                               fontSize: 22,
                               letterSpacing: -0.4,
@@ -103,7 +104,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       const Spacer(),
                       if (isDesktop) ...[
-                        for (final item in AppNav.primary) ...[
+                        for (final item in nav) ...[
                           _GlassNavLink(
                             label: item.label,
                             path: item.path,
@@ -112,9 +113,10 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                           const SizedBox(width: AppSpacing.lg),
                         ],
                         AppButton(
-                          label: Brand.primaryCta,
+                          label: settings.primaryCtaLabel,
                           size: AppButtonSize.sm,
-                          onPressed: () => context.go(AppRoutes.contact),
+                          onPressed: () =>
+                              context.go(settings.primaryCtaPath),
                         ),
                       ] else
                         Semantics(
@@ -122,7 +124,8 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                           label: 'Open menu',
                           child: IconButton(
                             tooltip: 'Menu',
-                            onPressed: () => _openMobileMenu(context),
+                            onPressed: () =>
+                                _openMobileMenu(context, settings),
                             icon: const Icon(Icons.menu_rounded),
                           ),
                         ),
@@ -149,7 +152,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     return location == path || location.startsWith('$path/');
   }
 
-  void _openMobileMenu(BuildContext context) {
+  void _openMobileMenu(BuildContext context, SiteSettings settings) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
@@ -157,6 +160,10 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
+        final links = [
+          ...settings.navigation.primary,
+          ...settings.navigation.utility,
+        ];
         return SafeArea(
           child: Semantics(
             scopesRoute: true,
@@ -168,7 +175,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final item in AppNav.primary)
+                  for (final item in links)
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
@@ -182,11 +189,11 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   const SizedBox(height: AppSpacing.lg),
                   AppButton(
-                    label: Brand.primaryCta,
+                    label: settings.primaryCtaLabel,
                     expand: true,
                     onPressed: () {
                       Navigator.pop(context);
-                      context.go(AppRoutes.contact);
+                      context.go(settings.primaryCtaPath);
                     },
                   ),
                 ],

@@ -4,8 +4,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/about/presentation/pages/about_page.dart';
 import '../../features/contact/presentation/pages/contact_page.dart';
+import '../../features/content/presentation/pages/articles_page.dart';
+import '../../features/content/presentation/pages/faq_page.dart';
+import '../../features/content/presentation/pages/industries_page.dart';
+import '../../features/content/presentation/pages/pricing_page.dart';
+import '../../features/content/presentation/pages/services_page.dart';
+import '../../features/content/presentation/pages/team_page.dart';
+import '../../features/content/presentation/pages/testimonials_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/services/presentation/pages/services_page.dart';
 import '../../features/work/presentation/pages/case_study_page.dart';
 import '../../features/work/presentation/pages/work_page.dart';
 import '../../shared/layout/page_shell.dart';
@@ -42,6 +48,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               state: state,
               child: const ServicesPage(),
             ),
+            routes: [
+              GoRoute(
+                path: ':slug',
+                name: 'service',
+                pageBuilder: (context, state) {
+                  final slug = state.pathParameters['slug'] ?? '';
+                  return _fadePage(
+                    state: state,
+                    child: ServiceDetailPage(slug: slug),
+                  );
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: AppRoutes.work,
@@ -59,6 +78,80 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   return _fadePage(
                     state: state,
                     child: CaseStudyPage(slug: slug),
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: AppRoutes.articles,
+            name: 'articles',
+            pageBuilder: (context, state) => _fadePage(
+              state: state,
+              child: const ArticlesPage(),
+            ),
+            routes: [
+              GoRoute(
+                path: ':slug',
+                name: 'article',
+                pageBuilder: (context, state) {
+                  final slug = state.pathParameters['slug'] ?? '';
+                  return _fadePage(
+                    state: state,
+                    child: ArticleDetailPage(slug: slug),
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: AppRoutes.testimonials,
+            name: 'testimonials',
+            pageBuilder: (context, state) => _fadePage(
+              state: state,
+              child: const TestimonialsPage(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.team,
+            name: 'team',
+            pageBuilder: (context, state) => _fadePage(
+              state: state,
+              child: const TeamPage(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.faq,
+            name: 'faq',
+            pageBuilder: (context, state) => _fadePage(
+              state: state,
+              child: const FaqPage(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.pricing,
+            name: 'pricing',
+            pageBuilder: (context, state) => _fadePage(
+              state: state,
+              child: const PricingPage(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.industries,
+            name: 'industries',
+            pageBuilder: (context, state) => _fadePage(
+              state: state,
+              child: const IndustriesPage(),
+            ),
+            routes: [
+              GoRoute(
+                path: ':slug',
+                name: 'industry',
+                pageBuilder: (context, state) {
+                  final slug = state.pathParameters['slug'] ?? '';
+                  return _fadePage(
+                    state: state,
+                    child: IndustryDetailPage(slug: slug),
                   );
                 },
               ),

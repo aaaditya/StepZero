@@ -39,6 +39,10 @@ Production notes: [docs/HOMEPAGE_IMPLEMENTATION.md](docs/HOMEPAGE_IMPLEMENTATION
 
 Premium case study system (Stripe/Linear × Apple): [docs/CASE_STUDY_SYSTEM.md](docs/CASE_STUDY_SYSTEM.md).
 
+## Content system
+
+CMS-ready collections for Projects, Services, Testimonials, Articles, Team, FAQs, Pricing, Industries, plus config-driven Navigation, Footer, and Settings: [docs/CONTENT_SYSTEM.md](docs/CONTENT_SYSTEM.md).
+
 ## Stack
 
 - Flutter (stable) · Material 3
@@ -49,7 +53,7 @@ Premium case study system (Stripe/Linear × Apple): [docs/CASE_STUDY_SYSTEM.md](
 ```
 lib/
   core/        # Design system, routing, shared primitives
-  features/    # home · services · work · about · contact
+  features/    # home · content · work · about · contact · …
   shared/      # Site chrome (nav, footer, page shell)
 ```
 

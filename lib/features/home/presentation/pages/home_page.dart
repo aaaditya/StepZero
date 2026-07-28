@@ -8,6 +8,7 @@ import '../widgets/how_we_transform_section.dart';
 import '../widgets/industries_section.dart';
 import '../widgets/insights_section.dart';
 import '../widgets/process_section.dart';
+import '../widgets/testimonials_section.dart';
 import '../widgets/transformation_section.dart';
 import '../widgets/why_stepzero_section.dart';
 
@@ -26,6 +27,7 @@ class HomePage extends StatelessWidget {
         TransformationSection(),
         HowWeTransformSection(),
         FeaturedWorkSection(),
+        TestimonialsSection(),
         IndustriesSection(),
         WhyStepZeroSection(),
         ProcessSection(),
