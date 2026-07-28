@@ -11,19 +11,27 @@ import 'package:stepzero/core/theme/app_typography.dart';
 
 void main() {
   setUpAll(() {
-    // Tests must not hit the network for Inter.
     GoogleFonts.config.allowRuntimeFetching = false;
   });
 
-  testWidgets('StepZero app boots and shows brand mark', (tester) async {
+  testWidgets('StepZero hero boots with brand and primary CTA', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1440, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
     await tester.pumpWidget(
       const ProviderScope(
         child: StepZeroApp(),
       ),
     );
+
+    // Advance past entrance budget; do not pumpAndSettle — cards float forever.
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1300));
 
     expect(find.text(Brand.name), findsWidgets);
+    expect(find.textContaining('Every Great Business'), findsOneWidget);
+    expect(find.text('Book a Discovery Call'), findsOneWidget);
+    expect(find.text('View Our Work'), findsOneWidget);
   });
 
   test('design tokens match brand specification', () {

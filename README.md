@@ -25,6 +25,10 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for every structural decision.
 
 See [docs/HOMEPAGE_UX_BLUEPRINT.md](docs/HOMEPAGE_UX_BLUEPRINT.md) for the full information architecture, user journey, and wireframe blueprint (no UI code).
 
+## Hero
+
+The homepage hero is implemented. Design rationale: [docs/HERO_DESIGN_DECISIONS.md](docs/HERO_DESIGN_DECISIONS.md).
+
 ## Stack
 
 - Flutter (stable) · Material 3

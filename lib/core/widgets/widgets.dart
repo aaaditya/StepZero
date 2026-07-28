@@ -4,4 +4,8 @@ export 'app_card.dart';
 export 'app_container.dart';
 export 'app_text.dart';
 export 'app_text_field.dart';
+export 'floating_glass_card.dart';
+export 'hero_canvas.dart';
+export 'pill_badge.dart';
 export 'responsive_builder.dart';
+export 'trust_indicator.dart';

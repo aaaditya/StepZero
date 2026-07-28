@@ -5,6 +5,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_container.dart';
 import '../../../../core/widgets/app_text.dart';
+import '../../../../shared/layout/page_body.dart';
 
 /// About feature entry — studio story and philosophy.
 class AboutPage extends StatelessWidget {
@@ -12,22 +13,24 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText.caption('ABOUT'),
-          const SizedBox(height: AppSpacing.md),
-          AppText.headingL('About'),
-          const SizedBox(height: AppSpacing.lg),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 640),
-            child: Text(
-              Brand.mission,
-              style: AppTypography.bodyLargeStyle,
+    return PageBody(
+      child: SectionContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText.caption('ABOUT'),
+            const SizedBox(height: AppSpacing.md),
+            AppText.headingL('About'),
+            const SizedBox(height: AppSpacing.lg),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 640),
+              child: Text(
+                Brand.mission,
+                style: AppTypography.bodyLargeStyle,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

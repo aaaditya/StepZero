@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/animations/hover_effects.dart';
 import '../../core/constants/brand.dart';
+import '../../core/constants/curves.dart';
 import '../../core/routing/routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -11,10 +15,9 @@ import '../../core/utils/responsive.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_container.dart';
 
-/// Persistent site chrome — nav + scrollable body + footer.
+/// Persistent site chrome — overlay nav + scrollable body + footer.
 ///
-/// Feature pages render only their content; this shell owns layout chrome
-/// so future sections never re-implement navigation.
+/// Nav floats above the hero so marketing sections can claim true 100vh.
 class PageShell extends StatelessWidget {
   const PageShell({
     required this.child,
@@ -29,16 +32,27 @@ class PageShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Column(
+      body: Stack(
         children: [
-          AppNavBar(location: location),
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: child),
-                const SliverToBoxAdapter(child: AppFooter()),
-              ],
-            ),
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: child),
+              const SliverToBoxAdapter(child: AppFooter()),
+            ],
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AppNavBar(location: location)
+                .animate()
+                .fadeIn(duration: 500.ms, curve: AppCurves.enter)
+                .moveY(
+                  begin: -8,
+                  end: 0,
+                  duration: 500.ms,
+                  curve: AppCurves.enter,
+                ),
           ),
         ],
       ),
@@ -59,54 +73,60 @@ class AppNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
 
-    return Material(
-      color: AppColors.background.withValues(alpha: 0.92),
-      child: DecoratedBox(
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: AppColors.border)),
-        ),
-        child: SafeArea(
-          bottom: false,
-          child: SizedBox(
-            height: 72,
-            child: MaxWidthBox(
-              padding: EdgeInsets.symmetric(
-                horizontal: Responsive.pageGutter(context),
-              ),
-              child: Row(
-                children: [
-                  HoverOpacity(
-                    onTap: () => context.go(AppRoutes.home),
-                    child: Text(
-                      Brand.name,
-                      style: AppTypography.headingSStyle.copyWith(
-                        fontSize: 22,
-                        letterSpacing: -0.4,
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.background.withValues(alpha: 0.78),
+            border: const Border(
+              bottom: BorderSide(color: AppColors.border),
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: SizedBox(
+              height: 72,
+              child: MaxWidthBox(
+                maxWidth: 1440,
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.pageGutter(context),
+                ),
+                child: Row(
+                  children: [
+                    HoverOpacity(
+                      onTap: () => context.go(AppRoutes.home),
+                      child: Text(
+                        Brand.name,
+                        style: AppTypography.headingSStyle.copyWith(
+                          fontSize: 22,
+                          letterSpacing: -0.4,
+                        ),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  if (isDesktop) ...[
-                    for (final item in AppNav.primary) ...[
-                      _NavLink(
-                        label: item.label,
-                        path: item.path,
-                        selected: location == item.path,
+                    const Spacer(),
+                    if (isDesktop) ...[
+                      for (final item in AppNav.primary) ...[
+                        _NavLink(
+                          label: item.label,
+                          path: item.path,
+                          selected: location == item.path,
+                        ),
+                        const SizedBox(width: AppSpacing.lg),
+                      ],
+                      AppButton(
+                        label: Brand.primaryCta,
+                        size: AppButtonSize.sm,
+                        onPressed: () => context.go(AppRoutes.contact),
                       ),
-                      const SizedBox(width: AppSpacing.lg),
-                    ],
-                    AppButton(
-                      label: Brand.primaryCta,
-                      size: AppButtonSize.sm,
-                      onPressed: () => context.go(AppRoutes.contact),
-                    ),
-                  ] else
-                    IconButton(
-                      tooltip: 'Menu',
-                      onPressed: () => _openMobileMenu(context),
-                      icon: const Icon(Icons.menu_rounded),
-                    ),
-                ],
+                    ] else
+                      IconButton(
+                        tooltip: 'Menu',
+                        onPressed: () => _openMobileMenu(context),
+                        icon: const Icon(Icons.menu_rounded),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
