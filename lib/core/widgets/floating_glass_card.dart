@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../animations/motion_accessibility.dart';
 import '../constants/curves.dart';
 import '../constants/durations.dart';
 import '../theme/app_colors.dart';
@@ -9,10 +10,6 @@ import '../theme/app_elevation.dart';
 import '../theme/app_radius.dart';
 
 /// Glassmorphism floating card — reusable across marketing surfaces.
-///
-/// Soft translucent surface, hairline border, backdrop blur, optional
-/// continuous float + hover lift. Designed for compositional depth
-/// (overlapping layers), not for dense form UI.
 class FloatingGlassCard extends StatefulWidget {
   const FloatingGlassCard({
     required this.child,
@@ -56,6 +53,7 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
   late final AnimationController _floatController;
   late final Animation<double> _floatAnimation;
   bool _hovered = false;
+  bool _floatArmed = false;
 
   @override
   void initState() {
@@ -71,11 +69,30 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
 
     if (widget.float) {
       Future<void>.delayed(widget.floatDelay, () {
-        if (mounted) {
-          _floatController.repeat(reverse: true);
-        }
+        if (!mounted) return;
+        _floatArmed = true;
+        _maybeStartFloat();
       });
     }
+  }
+
+  void _maybeStartFloat() {
+    if (!_floatArmed || !widget.float || !mounted) return;
+    if (MotionAccessibility.reduceMotion(context)) {
+      _floatController
+        ..stop()
+        ..value = 0;
+      return;
+    }
+    if (!_floatController.isAnimating) {
+      _floatController.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _maybeStartFloat();
   }
 
   @override
@@ -86,6 +103,7 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
 
   @override
   Widget build(BuildContext context) {
+    final reduce = MotionAccessibility.reduceMotion(context);
     final radius = widget.borderRadius ?? AppRadius.lgAll;
 
     Widget card = ClipRRect(
@@ -96,7 +114,7 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
           sigmaY: widget.blurSigma,
         ),
         child: AnimatedContainer(
-          duration: AppDurations.fast,
+          duration: reduce ? Duration.zero : AppDurations.fast,
           curve: AppCurves.hover,
           width: widget.width,
           padding: widget.padding,
@@ -131,8 +149,10 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
         child: GestureDetector(
           onTap: widget.onTap,
           child: AnimatedScale(
-            scale: _hovered && widget.enableHoverLift ? widget.hoverScale : 1,
-            duration: AppDurations.fast,
+            scale: _hovered && widget.enableHoverLift && !reduce
+                ? widget.hoverScale
+                : 1,
+            duration: reduce ? Duration.zero : AppDurations.fast,
             curve: AppCurves.hover,
             child: card,
           ),
@@ -140,7 +160,7 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
       );
     }
 
-    if (!widget.float) return card;
+    if (!widget.float || reduce) return card;
 
     return AnimatedBuilder(
       animation: _floatAnimation,

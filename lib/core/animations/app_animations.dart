@@ -1,8 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../constants/curves.dart';
 import '../constants/durations.dart';
+import 'motion_accessibility.dart';
 
 /// Shared motion recipes built on flutter_animate.
 ///
@@ -31,6 +32,29 @@ abstract final class AppAnimations {
         ),
       ];
 
+  /// Fade + slight scale settle (cards / media).
+  static List<Effect<dynamic>> fadeScale({
+    Duration? delay,
+    Duration? duration,
+    double begin = 0.97,
+  }) =>
+      [
+        FadeEffect(
+          delay: delay,
+          duration: duration ?? AppDurations.slow,
+          curve: AppCurves.enter,
+          begin: 0,
+          end: 1,
+        ),
+        ScaleEffect(
+          delay: delay,
+          duration: duration ?? AppDurations.slow,
+          curve: AppCurves.enter,
+          begin: Offset(begin, begin),
+          end: const Offset(1, 1),
+        ),
+      ];
+
   /// Opacity-only reveal for text that shouldn't travel.
   static List<Effect<dynamic>> fadeIn({
     Duration? delay,
@@ -47,11 +71,12 @@ abstract final class AppAnimations {
       ];
 
   /// Stagger helper — multiply index by [AppDurations.stagger].
-  static Duration staggerDelay(int index, {Duration? base}) =>
-      (base ?? Duration.zero) + (AppDurations.stagger * index);
+  static Duration staggerDelay(int index, {Duration? base, bool tight = false}) =>
+      (base ?? Duration.zero) +
+      ((tight ? AppDurations.staggerTight : AppDurations.stagger) * index);
 }
 
-/// Convenience wrapper applying [AppAnimations.fadeUp].
+/// Convenience wrapper applying [AppAnimations.fadeUp] with reduced-motion gate.
 class FadeUp extends StatelessWidget {
   const FadeUp({
     required this.child,
@@ -68,6 +93,7 @@ class FadeUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (MotionAccessibility.reduceMotion(context)) return child;
     return child.animate(
       effects: AppAnimations.fadeUp(
         delay: delay,
@@ -93,8 +119,37 @@ class FadeIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (MotionAccessibility.reduceMotion(context)) return child;
     return child.animate(
       effects: AppAnimations.fadeIn(delay: delay, duration: duration),
+    );
+  }
+}
+
+/// Convenience wrapper applying [AppAnimations.fadeScale].
+class FadeScale extends StatelessWidget {
+  const FadeScale({
+    required this.child,
+    this.delay,
+    this.duration,
+    this.begin = 0.97,
+    super.key,
+  });
+
+  final Widget child;
+  final Duration? delay;
+  final Duration? duration;
+  final double begin;
+
+  @override
+  Widget build(BuildContext context) {
+    if (MotionAccessibility.reduceMotion(context)) return child;
+    return child.animate(
+      effects: AppAnimations.fadeScale(
+        delay: delay,
+        duration: duration,
+        begin: begin,
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/animations/parallax.dart';
 import '../../../../core/constants/curves.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -29,106 +30,115 @@ class FinalCtaSection extends StatelessWidget {
     return SectionLandmark(
       label: 'Call to action',
       child: SectionContainer(
-      maxWidth: 1000,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(
-          horizontal: Responsive.isMobile(context) ? AppSpacing.lg : AppSpacing.xxxl,
-          vertical: Responsive.isMobile(context) ? AppSpacing.xxxl : AppSpacing.section,
-        ),
-        decoration: BoxDecoration(
+        maxWidth: 1000,
+        child: ClipRRect(
           borderRadius: AppRadius.xxlAll,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+          child: DriftingGradient(
+            duration: const Duration(seconds: 12),
+            borderRadius: AppRadius.xxlAll,
             colors: [
               AppColors.textPrimary,
               const Color(0xFF1A1A2E),
-              AppColors.accent.withValues(alpha: 0.85),
+              AppColors.accent.withValues(alpha: 0.9),
             ],
-            stops: const [0.0, 0.55, 1.0],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.accent.withValues(alpha: 0.2),
-              blurRadius: 48,
-              offset: const Offset(0, 24),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Text(
-              'Ready to Leave Step Zero?',
-              textAlign: TextAlign.center,
-              style: AppTypography.headingXlStyle.copyWith(
-                fontSize: titleSize,
-                color: AppColors.textInverse,
-                fontWeight: FontWeight.w700,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                horizontal:
+                    Responsive.isMobile(context) ? AppSpacing.lg : AppSpacing.xxxl,
+                vertical: Responsive.isMobile(context)
+                    ? AppSpacing.xxxl
+                    : AppSpacing.section,
               ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: Text(
-                'Let’s build a business customers remember.',
-                textAlign: TextAlign.center,
-                style: AppTypography.bodyLargeStyle.copyWith(
-                  color: AppColors.textInverse.withValues(alpha: 0.78),
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xxl),
-            Responsive.isMobile(context)
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      AppButton(
-                        label: 'Book Discovery Call',
-                        expand: true,
-                        onPressed: () => context.go(AppRoutes.contact),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      AppButton(
-                        label: 'See Our Work',
-                        variant: AppButtonVariant.onDark,
-                        expand: true,
-                        onPressed: () => context.go(AppRoutes.work),
-                      ),
-                    ],
-                  )
-                : Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: AppSpacing.md,
-                    runSpacing: AppSpacing.sm,
-                    children: [
-                      AppButton(
-                        label: 'Book Discovery Call',
-                        size: AppButtonSize.lg,
-                        onPressed: () => context.go(AppRoutes.contact),
-                      ),
-                      AppButton(
-                        label: 'See Our Work',
-                        variant: AppButtonVariant.onDark,
-                        size: AppButtonSize.lg,
-                        onPressed: () => context.go(AppRoutes.work),
-                      ),
-                    ],
+              decoration: BoxDecoration(
+                borderRadius: AppRadius.xxlAll,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: 0.22),
+                    blurRadius: 48,
+                    offset: const Offset(0, 24),
                   ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(
-              'Limited projects each quarter. Serious inquiries only.',
-              textAlign: TextAlign.center,
-              style: AppTypography.captionStyle.copyWith(
-                color: AppColors.textInverse.withValues(alpha: 0.55),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Ready to Leave Step Zero?',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.headingXlStyle.copyWith(
+                      fontSize: titleSize,
+                      color: AppColors.textInverse,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 520),
+                    child: Text(
+                      'Let’s build a business customers remember.',
+                      textAlign: TextAlign.center,
+                      style: AppTypography.bodyLargeStyle.copyWith(
+                        color: AppColors.textInverse.withValues(alpha: 0.78),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
+                  Responsive.isMobile(context)
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            AppButton(
+                              label: 'Book Discovery Call',
+                              expand: true,
+                              magnetic: true,
+                              pulse: true,
+                              onPressed: () => context.go(AppRoutes.contact),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            AppButton(
+                              label: 'See Our Work',
+                              variant: AppButtonVariant.onDark,
+                              expand: true,
+                              onPressed: () => context.go(AppRoutes.work),
+                            ),
+                          ],
+                        )
+                      : Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: AppSpacing.md,
+                          runSpacing: AppSpacing.sm,
+                          children: [
+                            AppButton(
+                              label: 'Book Discovery Call',
+                              size: AppButtonSize.lg,
+                              magnetic: true,
+                              pulse: true,
+                              onPressed: () => context.go(AppRoutes.contact),
+                            ),
+                            AppButton(
+                              label: 'See Our Work',
+                              variant: AppButtonVariant.onDark,
+                              size: AppButtonSize.lg,
+                              onPressed: () => context.go(AppRoutes.work),
+                            ),
+                          ],
+                        ),
+                  const SizedBox(height: AppSpacing.xl),
+                  Text(
+                    'Limited projects each quarter. Serious inquiries only.',
+                    textAlign: TextAlign.center,
+                    style: AppTypography.captionStyle.copyWith(
+                      color: AppColors.textInverse.withValues(alpha: 0.55),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      )
-          .animate()
-          .fadeIn(duration: 550.ms, curve: AppCurves.enter)
-          .moveY(begin: 18, end: 0, duration: 600.ms, curve: AppCurves.enter),
+          ),
+        )
+            .animate()
+            .fadeIn(duration: 550.ms, curve: AppCurves.enter)
+            .moveY(begin: 18, end: 0, duration: 600.ms, curve: AppCurves.enter),
       ),
     );
   }

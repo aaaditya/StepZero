@@ -13,6 +13,7 @@ import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/animated_counter.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_container.dart';
+import '../../../../core/widgets/expandable_surface_card.dart';
 import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
 
@@ -321,26 +322,30 @@ class _DeviceCluster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: Responsive.isMobile(context) ? 260 : 340,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 280),
-            curve: AppCurves.hover,
-            left: hovered ? 8 : 16,
-            top: 24,
-            child: _LaptopMock(accent: accent),
-          ),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 280),
-            curve: AppCurves.hover,
-            right: hovered ? 12 : 28,
-            bottom: 8,
-            child: _PhoneMock(accent: accent),
-          ),
-        ],
+    return HoverZoomMedia(
+      scale: 1.03,
+      borderRadius: AppRadius.xlAll,
+      child: SizedBox(
+        height: Responsive.isMobile(context) ? 260 : 340,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 280),
+              curve: AppCurves.hover,
+              left: hovered ? 8 : 16,
+              top: 24,
+              child: _LaptopMock(accent: accent),
+            ),
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 280),
+              curve: AppCurves.hover,
+              right: hovered ? 12 : 28,
+              bottom: 8,
+              child: _PhoneMock(accent: accent),
+            ),
+          ],
+        ),
       ),
     );
   }

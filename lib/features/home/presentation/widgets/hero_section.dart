@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../../../core/animations/parallax.dart';
 import '../../../../core/constants/breakpoints.dart';
 import '../../../../core/constants/curves.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -172,26 +173,30 @@ class _AnimatedDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HeroDashboard(compact: compact)
-        .animate()
-        .fadeIn(
-          delay: 280.ms,
-          duration: 700.ms,
-          curve: AppCurves.enter,
-        )
-        .moveY(
-          begin: 24,
-          end: 0,
-          delay: 280.ms,
-          duration: 750.ms,
-          curve: AppCurves.enter,
-        )
-        .scale(
-          begin: const Offset(0.96, 0.96),
-          end: const Offset(1, 1),
-          delay: 280.ms,
-          duration: 750.ms,
-          curve: AppCurves.enter,
-        );
+    return ParallaxLayer(
+      scrollFactor: 0.04,
+      pointerFactor: 10,
+      child: HeroDashboard(compact: compact)
+          .animate()
+          .fadeIn(
+            delay: 280.ms,
+            duration: 700.ms,
+            curve: AppCurves.enter,
+          )
+          .moveY(
+            begin: 24,
+            end: 0,
+            delay: 280.ms,
+            duration: 750.ms,
+            curve: AppCurves.enter,
+          )
+          .scale(
+            begin: const Offset(0.96, 0.96),
+            end: const Offset(1, 1),
+            delay: 280.ms,
+            duration: 750.ms,
+            curve: AppCurves.enter,
+          ),
+    );
   }
 }

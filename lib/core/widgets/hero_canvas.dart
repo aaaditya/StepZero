@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../animations/parallax.dart';
 import '../theme/app_colors.dart';
 
 /// Subtle dot grid painter for premium off-white canvases.
@@ -74,7 +75,7 @@ class RadialGlow extends StatelessWidget {
   }
 }
 
-/// Hero canvas: off-white + dot grid + optional positioned glow.
+/// Hero canvas: off-white + dot grid + drifting ambient glow + parallax.
 class HeroCanvas extends StatelessWidget {
   const HeroCanvas({
     required this.child,
@@ -97,14 +98,32 @@ class HeroCanvas extends StatelessWidget {
         children: [
           if (showGrid)
             const Positioned.fill(
-              child: CustomPaint(painter: DotGridPainter()),
+              child: ExcludeSemantics(
+                child: CustomPaint(painter: DotGridPainter()),
+              ),
             ),
           Positioned.fill(
             child: Align(
               alignment: glowAlignment,
-              child: Transform.rotate(
-                angle: -math.pi / 12,
-                child: RadialGlow(size: glowSize),
+              child: ParallaxLayer(
+                scrollFactor: 0.12,
+                pointerFactor: 18,
+                child: Transform.rotate(
+                  angle: -math.pi / 12,
+                  child: DriftingGradient(
+                    duration: const Duration(seconds: 16),
+                    colors: [
+                      AppColors.accent.withValues(alpha: 0.16),
+                      AppColors.accent.withValues(alpha: 0.05),
+                      AppColors.accent.withValues(alpha: 0),
+                    ],
+                    child: SizedBox(
+                      width: glowSize,
+                      height: glowSize,
+                      child: RadialGlow(size: glowSize, opacity: 0.12),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

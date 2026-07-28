@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../animations/magnetic.dart';
+import '../animations/motion_accessibility.dart';
+import '../constants/curves.dart';
+import '../constants/durations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
@@ -30,9 +34,7 @@ enum AppButtonSize {
   lg,
 }
 
-/// Production button with hover, focus, and disabled states.
-///
-/// Prefer this over raw Material buttons so CTAs stay brand-consistent.
+/// Production button with hover, press, magnetic, and glow feedback.
 class AppButton extends StatefulWidget {
   const AppButton({
     required this.label,
@@ -43,6 +45,8 @@ class AppButton extends StatefulWidget {
     this.trailing,
     this.expand = false,
     this.isLoading = false,
+    this.magnetic = false,
+    this.pulse = false,
     super.key,
   });
 
@@ -55,6 +59,12 @@ class AppButton extends StatefulWidget {
   final bool expand;
   final bool isLoading;
 
+  /// Desktop pointer magnetic attraction.
+  final bool magnetic;
+
+  /// Soft ambient glow pulse (primary CTAs).
+  final bool pulse;
+
   @override
   State<AppButton> createState() => _AppButtonState();
 }
@@ -62,19 +72,29 @@ class AppButton extends StatefulWidget {
 class _AppButtonState extends State<AppButton> {
   bool _hovered = false;
   bool _focused = false;
+  bool _pressed = false;
 
   bool get _enabled => widget.onPressed != null && !widget.isLoading;
 
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
+    final reduce = MotionAccessibility.reduceMotion(context);
     final padding = _paddingFor(widget.size, compact: isMobile);
     final colors = _colorsFor(widget.variant, hovered: _hovered);
+    final glow = widget.variant == AppButtonVariant.primary &&
+        (_hovered || widget.pulse);
 
-    final child = AnimatedContainer(
-      duration: const Duration(milliseconds: 180),
-      curve: Curves.easeOut,
+    Widget child = AnimatedContainer(
+      duration: reduce ? Duration.zero : AppDurations.fast,
+      curve: AppCurves.hover,
       padding: padding,
+      transform: Matrix4.diagonal3Values(
+        _pressed && !reduce ? 0.97 : 1,
+        _pressed && !reduce ? 0.97 : 1,
+        1,
+      ),
+      transformAlignment: Alignment.center,
       decoration: BoxDecoration(
         color: _enabled ? colors.background : colors.background.withValues(alpha: 0.4),
         borderRadius: AppRadius.mdAll,
@@ -86,15 +106,22 @@ class _AppButtonState extends State<AppButton> {
             : (_focused
                 ? Border.all(color: AppColors.borderFocus, width: 1.5)
                 : null),
-        boxShadow: _focused
-            ? [
-                BoxShadow(
-                  color: AppColors.borderFocus.withValues(alpha: 0.25),
-                  blurRadius: 0,
-                  spreadRadius: 3,
-                ),
-              ]
-            : null,
+        boxShadow: [
+          if (_focused)
+            BoxShadow(
+              color: AppColors.borderFocus.withValues(alpha: 0.25),
+              blurRadius: 0,
+              spreadRadius: 3,
+            ),
+          if (glow && !reduce)
+            BoxShadow(
+              color: AppColors.accent.withValues(
+                alpha: _hovered ? 0.35 : 0.18,
+              ),
+              blurRadius: _hovered ? 22 : 16,
+              offset: const Offset(0, 8),
+            ),
+        ],
       ),
       child: Row(
         mainAxisSize: widget.expand ? MainAxisSize.max : MainAxisSize.min,
@@ -135,6 +162,21 @@ class _AppButtonState extends State<AppButton> {
       ),
     );
 
+    if (widget.pulse && widget.variant == AppButtonVariant.primary) {
+      child = SoftPulse(
+        enabled: !reduce && _enabled,
+        color: AppColors.accent,
+        child: child,
+      );
+    }
+
+    if (widget.magnetic && !isMobile) {
+      child = Magnetic(
+        enabled: _enabled && !reduce,
+        child: child,
+      );
+    }
+
     return Semantics(
       button: true,
       enabled: _enabled,
@@ -154,6 +196,11 @@ class _AppButtonState extends State<AppButton> {
           ),
         },
         child: GestureDetector(
+          onTapDown: _enabled && !reduce
+              ? (_) => setState(() => _pressed = true)
+              : null,
+          onTapCancel: () => setState(() => _pressed = false),
+          onTapUp: (_) => setState(() => _pressed = false),
           onTap: _enabled ? widget.onPressed : null,
           child: widget.expand ? child : IntrinsicWidth(child: child),
         ),

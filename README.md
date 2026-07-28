@@ -47,6 +47,10 @@ CMS-ready collections for Projects, Services, Testimonials, Articles, Team, FAQs
 
 Lazy loading, self-hosted fonts, Open Graph / Twitter Cards, structured data, and Core Web Vitals guidance: [docs/PERFORMANCE_SEO.md](docs/PERFORMANCE_SEO.md).
 
+## Motion
+
+Reusable motion system (durations, curves, magnetic CTAs, parallax, splash): [docs/MOTION.md](docs/MOTION.md).
+
 ## Stack
 
 - Flutter (stable) · Material 3

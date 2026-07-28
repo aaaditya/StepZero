@@ -157,6 +157,8 @@ class _HeroCtaRow extends StatelessWidget {
       label: 'Book a Discovery Call',
       size: AppButtonSize.lg,
       expand: expand,
+      magnetic: true,
+      pulse: true,
       onPressed: () => context.go(AppRoutes.contact),
     );
 

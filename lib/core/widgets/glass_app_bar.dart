@@ -54,12 +54,12 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
           curve: AppCurves.hover,
           decoration: BoxDecoration(
             color: AppColors.background.withValues(
-              alpha: scrolled ? 0.92 : 0.78,
+              alpha: scrolled ? 0.92 : 0.55,
             ),
             border: Border(
               bottom: BorderSide(
                 color: AppColors.border.withValues(
-                  alpha: scrolled ? 1 : 0.7,
+                  alpha: scrolled ? 1 : 0.35,
                 ),
               ),
             ),
@@ -75,8 +75,10 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
           child: SafeArea(
             bottom: false,
-            child: SizedBox(
-              height: height,
+            child: AnimatedContainer(
+              duration: reduceMotion ? Duration.zero : AppDurations.fast,
+              curve: AppCurves.hover,
+              height: scrolled ? 58 : 64,
               child: MaxWidthBox(
                 maxWidth: maxWidth,
                 padding: EdgeInsets.symmetric(
@@ -115,6 +117,8 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
                         AppButton(
                           label: settings.primaryCtaLabel,
                           size: AppButtonSize.sm,
+                          magnetic: true,
+                          pulse: true,
                           onPressed: () =>
                               context.go(settings.primaryCtaPath),
                         ),
@@ -225,12 +229,19 @@ class _GlassNavLink extends StatelessWidget {
       label: label,
       child: HoverOpacity(
         onTap: () => context.go(path),
-        child: Text(
-          label,
-          style: AppTypography.navLabel.copyWith(
-            color: selected ? AppColors.textPrimary : AppColors.textSecondary,
-            fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              label,
+              style: AppTypography.navLabel.copyWith(
+                color:
+                    selected ? AppColors.textPrimary : AppColors.textSecondary,
+                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+              ),
+            ),
+            NavUnderline(active: selected),
+          ],
         ),
       ),
     );

@@ -234,7 +234,8 @@ class _TimelineNodeState extends State<_TimelineNode> {
                       ),
                     ),
                     AnimatedContainer(
-                      duration: const Duration(milliseconds: 240),
+                      duration: const Duration(milliseconds: 320),
+                      curve: Curves.easeOutCubic,
                       width: emphasize ? 18 : 12,
                       height: emphasize ? 18 : 12,
                       decoration: BoxDecoration(
@@ -251,12 +252,22 @@ class _TimelineNodeState extends State<_TimelineNode> {
                         boxShadow: widget.selected
                             ? [
                                 BoxShadow(
-                                  color: widget.step.accent.withValues(alpha: 0.35),
-                                  blurRadius: 12,
-                                  spreadRadius: 2,
+                                  color: widget.step.accent
+                                      .withValues(alpha: 0.45),
+                                  blurRadius: 16,
+                                  spreadRadius: 3,
                                 ),
                               ]
-                            : null,
+                            : _hovered
+                                ? [
+                                    BoxShadow(
+                                      color: widget.step.accent
+                                          .withValues(alpha: 0.18),
+                                      blurRadius: 10,
+                                      spreadRadius: 1,
+                                    ),
+                                  ]
+                                : null,
                       ),
                     ),
                     Expanded(

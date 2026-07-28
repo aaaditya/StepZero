@@ -22,4 +22,13 @@ abstract final class AppCurves {
 
   /// Page route transitions.
   static const Curve page = Curves.easeInOutCubic;
+
+  /// Ambient loops (float, pulse, gradient).
+  static const Curve ambient = Curves.easeInOutSine;
+
+  /// Magnetic pointer follow — soft catch-up.
+  static const Curve magnetic = Curves.easeOutCubic;
+
+  /// Indicator underline slide.
+  static const Curve indicator = Curves.easeInOutCubic;
 }

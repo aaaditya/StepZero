@@ -119,21 +119,50 @@
       place-items: center;
       background: #FAFAF8;
       pointer-events: none;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
     #flutter-loading[data-hidden="true"] {
       opacity: 0;
+    }
+    #flutter-loading .brand {
+      text-align: center;
+    }
+    #flutter-loading .logo-mark {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 18px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #5B5FEF 0%, #8B8FF7 100%);
+      box-shadow: 0 12px 40px rgba(91, 95, 239, 0.28);
+      animation: sz-breathe 2.4s ease-in-out infinite;
     }
     #flutter-loading .mark {
       font-size: 28px;
       font-weight: 700;
       letter-spacing: -0.04em;
       color: #111111;
+      animation: sz-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     #flutter-loading .sub {
       margin-top: 8px;
       font-size: 14px;
       color: #6B7280;
+      animation: sz-rise 0.7s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes sz-breathe {
+      0%, 100% { transform: scale(1); box-shadow: 0 12px 40px rgba(91, 95, 239, 0.22); }
+      50% { transform: scale(1.04); box-shadow: 0 16px 48px rgba(91, 95, 239, 0.34); }
+    }
+    @keyframes sz-rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #flutter-loading .logo-mark,
+      #flutter-loading .mark,
+      #flutter-loading .sub {
+        animation: none !important;
+      }
     }
     noscript .noscript-shell {
       max-width: 720px;
@@ -150,7 +179,8 @@
   <div id="main-content" tabindex="-1"></div>
 
   <div id="flutter-loading" aria-live="polite" aria-busy="true">
-    <div>
+    <div class="brand">
+      <div class="logo-mark" aria-hidden="true"></div>
       <div class="mark">StepZero</div>
       <div class="sub">Loading…</div>
     </div>
@@ -180,7 +210,7 @@
       if (!el) return;
       el.setAttribute('data-hidden', 'true');
       el.setAttribute('aria-busy', 'false');
-      setTimeout(function () { el.remove(); }, 400);
+      setTimeout(function () { el.remove(); }, 480);
     });
   </script>
   <script src="flutter_bootstrap.js" async></script>

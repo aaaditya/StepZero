@@ -15,6 +15,8 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/work/presentation/pages/case_study_page.dart';
 import '../../features/work/presentation/pages/work_page.dart';
 import '../../shared/layout/page_shell.dart';
+import '../constants/curves.dart';
+import '../constants/durations.dart';
 import 'routes.dart';
 
 /// Root navigator key — required for dialogs / snackbars outside the route tree.
@@ -191,15 +193,26 @@ CustomTransitionPage<void> _fadePage({
     key: state.pageKey,
     name: state.name,
     child: child,
-    transitionDuration: const Duration(milliseconds: 280),
-    reverseTransitionDuration: const Duration(milliseconds: 220),
+    transitionDuration: AppDurations.page,
+    reverseTransitionDuration: AppDurations.pageReverse,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final reduce = MediaQuery.disableAnimationsOf(context);
+      if (reduce) return child;
+
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: AppCurves.page,
+        reverseCurve: AppCurves.exit,
+      );
       return FadeTransition(
-        opacity: CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
+        opacity: curved,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.012),
+            end: Offset.zero,
+          ).animate(curved),
+          child: child,
         ),
-        child: child,
       );
     },
   );
