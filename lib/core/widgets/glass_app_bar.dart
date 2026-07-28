@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/content/domain/site_config.dart';
 import '../../features/content/presentation/providers/content_providers.dart';
 import '../animations/hover_effects.dart';
+import '../constants/app_layout.dart';
 import '../constants/curves.dart';
 import '../constants/durations.dart';
 import '../routing/routes.dart';
@@ -24,7 +25,7 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
     required this.location,
     this.scrolled = false,
     this.height = 72,
-    this.maxWidth = 1440,
+    this.maxWidth = AppLayout.heroMaxWidth,
     super.key,
   });
 
@@ -78,7 +79,9 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
             child: AnimatedContainer(
               duration: reduceMotion ? Duration.zero : AppDurations.fast,
               curve: AppCurves.hover,
-              height: scrolled ? 58 : 64,
+              height: scrolled
+                  ? AppLayout.navContentHeightScrolled
+                  : AppLayout.navContentHeight,
               child: MaxWidthBox(
                 maxWidth: maxWidth,
                 padding: EdgeInsets.symmetric(
@@ -95,11 +98,20 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
                         label: '${settings.siteName} home',
                         child: HoverOpacity(
                           onTap: () => context.go(AppRoutes.home),
-                          child: Text(
-                            settings.siteName,
-                            style: AppTypography.headingSStyle.copyWith(
-                              fontSize: 22,
-                              letterSpacing: -0.4,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              minHeight: AppLayout.minTouchTarget,
+                              minWidth: AppLayout.minTouchTarget,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                settings.siteName,
+                                style: AppTypography.headingSStyle.copyWith(
+                                  fontSize: 22,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -112,7 +124,7 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             path: item.path,
                             selected: _isSelected(location, item.path),
                           ),
-                          const SizedBox(width: AppSpacing.lg),
+                          const SizedBox(width: AppSpacing.md),
                         ],
                         AppButton(
                           label: settings.primaryCtaLabel,
@@ -128,6 +140,10 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
                           label: 'Open menu',
                           child: IconButton(
                             tooltip: 'Menu',
+                            constraints: const BoxConstraints(
+                              minWidth: AppLayout.minTouchTarget,
+                              minHeight: AppLayout.minTouchTarget,
+                            ),
                             onPressed: () =>
                                 _openMobileMenu(context, settings),
                             icon: const Icon(Icons.menu_rounded),
@@ -229,19 +245,26 @@ class _GlassNavLink extends StatelessWidget {
       label: label,
       child: HoverOpacity(
         onTap: () => context.go(path),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              style: AppTypography.navLabel.copyWith(
-                color:
-                    selected ? AppColors.textPrimary : AppColors.textSecondary,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: AppLayout.minTouchTarget,
+            minWidth: AppLayout.minTouchTarget,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                label,
+                style: AppTypography.navLabel.copyWith(
+                  color: selected
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                ),
               ),
-            ),
-            NavUnderline(active: selected),
-          ],
+              NavUnderline(active: selected),
+            ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_layout.dart';
 import '../../../../core/constants/curves.dart';
+import '../../../../core/constants/durations.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_elevation.dart';
@@ -16,96 +19,57 @@ import '../../../../core/widgets/app_container.dart';
 import '../../../../core/widgets/expandable_surface_card.dart';
 import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../work/domain/case_study.dart';
+import '../../../work/presentation/providers/case_study_providers.dart';
 
-class _CaseStudy {
-  const _CaseStudy({
-    required this.slug,
-    required this.name,
-    required this.industry,
-    required this.problem,
-    required this.solution,
-    required this.results,
-    required this.metrics,
-    required this.accent,
-  });
-
-  final String slug;
-  final String name;
-  final String industry;
-  final String problem;
-  final String solution;
-  final String results;
-  final List<(String, String)> metrics;
-  final Color accent;
-}
-
-/// Large horizontal transformation stories — not a portfolio tile grid.
-class FeaturedWorkSection extends StatelessWidget {
+/// Large horizontal transformation stories — sourced from case study catalog.
+class FeaturedWorkSection extends ConsumerWidget {
   const FeaturedWorkSection({super.key});
 
-  static const _cases = <_CaseStudy>[
-    _CaseStudy(
-      slug: 'northside-clinic',
-      name: 'Northside Clinic',
-      industry: 'Healthcare',
-      problem: 'Looked interchangeable online. Booking lived in phone tag.',
-      solution: 'Brand system, premium site, AI intake + WhatsApp follow-ups.',
-      results: 'Patients now self-qualify before they ever call the desk.',
-      metrics: [('Bookings', '+142%'), ('No-shows', '-38%'), ('Rating', '4.9')],
-      accent: AppColors.accent,
-    ),
-    _CaseStudy(
-      slug: 'oven-and-oak',
-      name: 'Oven & Oak',
-      industry: 'Restaurant',
-      problem: 'Beautiful room, forgettable digital presence, dead hours midweek.',
-      solution: 'Identity refresh, site + QR menu, review engine, local SEO.',
-      results: 'Weeknight covers filled. Brand finally matched the plating.',
-      metrics: [('Covers', '+87%'), ('Orders', '+164%'), ('Search', 'Top 3')],
-      accent: Color(0xFF0F766E),
-    ),
-  ];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final studies = ref.watch(caseStudiesProvider);
+
     return SectionLandmark(
       label: 'Featured transformations',
       child: SectionContainer(
-      maxWidth: 1440,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SectionHeader(
-            eyebrow: 'Featured transformations',
-            title: 'Proof that order beats tactics.',
-            subtitle:
-                'Each engagement is a business system — brand, presence, automation, growth — told as a transformation, not a moodboard.',
-            action: Responsive.isDesktop(context)
-                ? AppButton(
-                    label: 'View all work',
-                    variant: AppButtonVariant.secondary,
-                    size: AppButtonSize.sm,
-                    onPressed: () => context.go(AppRoutes.work),
-                  )
-                : null,
-          ),
-          const SizedBox(height: AppSpacing.xxxl),
-          for (var i = 0; i < _cases.length; i++) ...[
-            _CaseStudyCard(study: _cases[i], reverse: i.isOdd),
-            if (i != _cases.length - 1) const SizedBox(height: AppSpacing.xxl),
-          ],
-          if (!Responsive.isDesktop(context)) ...[
-            const SizedBox(height: AppSpacing.xl),
-            AppButton(
-              label: 'View all work',
-              variant: AppButtonVariant.secondary,
-              expand: true,
-              onPressed: () => context.go(AppRoutes.work),
+        maxWidth: AppLayout.heroMaxWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SectionHeader(
+              eyebrow: 'Featured transformations',
+              title: 'Proof that order beats tactics.',
+              subtitle:
+                  'Each engagement is a business system — brand, presence, '
+                  'automation, growth — told as a transformation, not a moodboard.',
+              action: Responsive.isDesktop(context)
+                  ? AppButton(
+                      label: 'View all work',
+                      variant: AppButtonVariant.secondary,
+                      size: AppButtonSize.sm,
+                      onPressed: () => context.go(AppRoutes.work),
+                    )
+                  : null,
             ),
+            const SizedBox(height: AppSpacing.xxxl),
+            for (var i = 0; i < studies.length; i++) ...[
+              _CaseStudyCard(study: studies[i], reverse: i.isOdd),
+              if (i != studies.length - 1)
+                const SizedBox(height: AppSpacing.xxl),
+            ],
+            if (!Responsive.isDesktop(context)) ...[
+              const SizedBox(height: AppSpacing.xl),
+              AppButton(
+                label: 'View all work',
+                expand: true,
+                variant: AppButtonVariant.secondary,
+                onPressed: () => context.go(AppRoutes.work),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -113,7 +77,7 @@ class FeaturedWorkSection extends StatelessWidget {
 class _CaseStudyCard extends StatefulWidget {
   const _CaseStudyCard({required this.study, required this.reverse});
 
-  final _CaseStudy study;
+  final CaseStudy study;
   final bool reverse;
 
   @override
@@ -125,25 +89,26 @@ class _CaseStudyCardState extends State<_CaseStudyCard> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktop(context);
     final study = widget.study;
+    final accent = Color(study.accent);
+    final isDesktop = Responsive.isDesktop(context);
 
+    final mockups = _DeviceCluster(accent: accent, hovered: _hovered);
     final copy = _CaseCopy(study: study);
-    final mockups = _DeviceCluster(accent: study.accent, hovered: _hovered);
 
     final row = isDesktop
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: widget.reverse
                 ? [
-                    Expanded(flex: 55, child: mockups),
+                    Expanded(flex: 5, child: copy),
                     const SizedBox(width: AppSpacing.xxl),
-                    Expanded(flex: 45, child: copy),
+                    Expanded(flex: 6, child: mockups),
                   ]
                 : [
-                    Expanded(flex: 45, child: copy),
+                    Expanded(flex: 6, child: mockups),
                     const SizedBox(width: AppSpacing.xxl),
-                    Expanded(flex: 55, child: mockups),
+                    Expanded(flex: 5, child: copy),
                   ],
           )
         : Column(
@@ -159,7 +124,7 @@ class _CaseStudyCardState extends State<_CaseStudyCard> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 280),
+        duration: AppDurations.normal,
         curve: AppCurves.hover,
         padding: EdgeInsets.all(
           Responsive.isMobile(context) ? AppSpacing.lg : AppSpacing.xxl,
@@ -184,10 +149,12 @@ class _CaseStudyCardState extends State<_CaseStudyCard> {
 class _CaseCopy extends StatelessWidget {
   const _CaseCopy({required this.study});
 
-  final _CaseStudy study;
+  final CaseStudy study;
 
   @override
   Widget build(BuildContext context) {
+    final metrics = study.heroMetrics.take(3).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -201,7 +168,7 @@ class _CaseCopy extends StatelessWidget {
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
-            study.industry,
+            study.overview.industry,
             style: AppTypography.captionStyle.copyWith(
               color: AppColors.accent,
               fontWeight: FontWeight.w600,
@@ -221,18 +188,18 @@ class _CaseCopy extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
-        _LabeledBlock(label: 'Problem', body: study.problem),
+        _LabeledBlock(label: 'Problem', body: study.challenge),
         const SizedBox(height: AppSpacing.md),
-        _LabeledBlock(label: 'Solution', body: study.solution),
+        _LabeledBlock(label: 'Solution', body: study.outcomeLine),
         const SizedBox(height: AppSpacing.md),
-        _LabeledBlock(label: 'Results', body: study.results),
+        _LabeledBlock(label: 'Results', body: study.resultsNarrative),
         const SizedBox(height: AppSpacing.xl),
         Wrap(
           spacing: AppSpacing.md,
           runSpacing: AppSpacing.md,
           children: [
-            for (final metric in study.metrics)
-              _MetricChip(label: metric.$1, value: metric.$2),
+            for (final metric in metrics)
+              _MetricChip(label: metric.label, value: metric.value),
           ],
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -260,14 +227,18 @@ class _LabeledBlock extends StatelessWidget {
         Text(
           label.toUpperCase(),
           style: AppTypography.captionStyle.copyWith(
-            letterSpacing: 1.1,
             fontWeight: FontWeight.w600,
+            letterSpacing: 1.1,
             color: AppColors.textTertiary,
-            fontSize: 11,
           ),
         ),
-        const SizedBox(height: 4),
-        Text(body, style: AppTypography.bodyStyle.copyWith(fontSize: 16)),
+        const SizedBox(height: AppSpacing.xxs),
+        Text(
+          body,
+          style: AppTypography.bodyStyle.copyWith(fontSize: 16),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }
@@ -303,10 +274,7 @@ class _MetricChip extends StatelessWidget {
               ),
               semanticLabel: value,
             ),
-            Text(
-              label,
-              style: AppTypography.captionStyle,
-            ),
+            Text(label, style: AppTypography.captionStyle),
           ],
         ),
       ),
@@ -331,14 +299,14 @@ class _DeviceCluster extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             AnimatedPositioned(
-              duration: const Duration(milliseconds: 280),
+              duration: AppDurations.normal,
               curve: AppCurves.hover,
               left: hovered ? 8 : 16,
               top: 24,
               child: _LaptopMock(accent: accent),
             ),
             AnimatedPositioned(
-              duration: const Duration(milliseconds: 280),
+              duration: AppDurations.normal,
               curve: AppCurves.hover,
               right: hovered ? 12 : 28,
               bottom: 8,
@@ -358,74 +326,28 @@ class _LaptopMock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: Responsive.isMobile(context) ? 240 : 320,
-          height: Responsive.isMobile(context) ? 150 : 200,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: AppElevation.medium,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  accent.withValues(alpha: 0.25),
-                  AppColors.surface,
-                  accent.withValues(alpha: 0.08),
-                ],
-              ),
-            ),
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 80,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: AppColors.textPrimary.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  width: 140,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: AppColors.textSecondary.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  width: 64,
-                  height: 22,
-                  decoration: BoxDecoration(
-                    color: accent,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-              ],
-            ),
+    return Container(
+      width: Responsive.isMobile(context) ? 220 : 280,
+      height: Responsive.isMobile(context) ? 150 : 190,
+      decoration: const BoxDecoration(
+        color: Color(AppLayout.chromeDark),
+        borderRadius: AppRadius.lgAll,
+      ),
+      padding: const EdgeInsets.all(10),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: AppRadius.mdAll,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              accent.withValues(alpha: 0.35),
+              AppColors.surfaceMuted,
+              accent.withValues(alpha: 0.15),
+            ],
           ),
         ),
-        Container(
-          width: Responsive.isMobile(context) ? 280 : 360,
-          height: 10,
-          decoration: BoxDecoration(
-            color: const Color(0xFF2A2A2A),
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -438,65 +360,26 @@ class _PhoneMock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Responsive.isMobile(context) ? 90 : 110,
-      height: Responsive.isMobile(context) ? 180 : 220,
-      padding: const EdgeInsets.all(8),
+      width: 88,
+      height: 170,
       decoration: BoxDecoration(
-        color: const Color(0xFF111111),
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: AppElevation.high,
-        border: Border.all(color: const Color(0xFF333333)),
+        color: const Color(AppLayout.chromeMuted),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white24),
+        boxShadow: AppElevation.medium,
       ),
-      child: Container(
+      padding: const EdgeInsets.all(8),
+      child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Container(
-              width: 28,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.borderStrong,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              height: 48,
-              decoration: BoxDecoration(
-                color: accent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              height: 8,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const SizedBox(height: 6),
-            Container(
-              height: 8,
-              width: 40,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const Spacer(),
-            Container(
-              height: 24,
-              decoration: BoxDecoration(
-                color: accent,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(14),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              accent.withValues(alpha: 0.5),
+              AppColors.surface,
+            ],
+          ),
         ),
       ),
     );

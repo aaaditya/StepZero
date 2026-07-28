@@ -21,6 +21,7 @@ dependencies:
 
   # Declarative, performant motion primitives
   flutter_animate: ^4.5.2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

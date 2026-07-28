@@ -52,7 +52,7 @@ class HeroCopyColumn extends StatelessWidget {
       children: [
         const PillBadge(
           label: 'Helping Local Businesses Grow',
-          leading: Text('🚀', style: TextStyle(fontSize: 13)),
+          leading: Icon(Icons.auto_awesome, size: 14),
         )
             .animate()
             .fadeIn(duration: 500.ms, curve: AppCurves.enter)

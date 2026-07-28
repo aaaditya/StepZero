@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/analytics/analytics.dart';
+import '../../core/analytics/analytics_providers.dart';
 import '../../core/animations/hover_effects.dart';
+import '../../core/constants/app_layout.dart';
 import '../../core/routing/routes.dart';
 import '../../core/seo/seo_controller.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
+import '../../core/utils/external_link.dart';
 import '../../core/utils/responsive.dart';
+import '../../core/utils/validators.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_container.dart';
 import '../../core/widgets/app_text_field.dart';
@@ -19,7 +24,7 @@ import '../../features/content/domain/site_config.dart';
 import '../../features/content/presentation/providers/content_providers.dart';
 
 /// Persistent site chrome — sticky glass nav + smooth scroll body + footer.
-class PageShell extends StatefulWidget {
+class PageShell extends ConsumerStatefulWidget {
   const PageShell({
     required this.child,
     required this.location,
@@ -30,10 +35,10 @@ class PageShell extends StatefulWidget {
   final String location;
 
   @override
-  State<PageShell> createState() => _PageShellState();
+  ConsumerState<PageShell> createState() => _PageShellState();
 }
 
-class _PageShellState extends State<PageShell> {
+class _PageShellState extends ConsumerState<PageShell> {
   final _scrollController = ScrollController();
   final _mainContentKey = GlobalKey();
   bool _scrolled = false;
@@ -42,26 +47,30 @@ class _PageShellState extends State<PageShell> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    _applySeo();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _applySeoAndAnalytics());
   }
 
   @override
   void didUpdateWidget(covariant PageShell oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.location != widget.location) {
-      _applySeo();
+      _applySeoAndAnalytics();
       if (_scrollController.hasClients) {
         _scrollController.jumpTo(0);
       }
     }
   }
 
-  void _applySeo() {
+  void _applySeoAndAnalytics() {
     SeoController.apply(SeoController.forPath(widget.location));
+    ref.read(analyticsProvider).screen(
+          widget.location,
+          properties: {'path': widget.location},
+        );
   }
 
   void _onScroll() {
-    final next = _scrollController.offset > 12;
+    final next = _scrollController.offset > AppLayout.navElevateOffset;
     if (next != _scrolled) {
       setState(() => _scrolled = next);
     }
@@ -91,7 +100,7 @@ class _PageShellState extends State<PageShell> {
                 parent: BouncingScrollPhysics(),
               ),
               slivers: [
-                SliverToBoxAdapter(
+                ContainedLayout(
                   child: Semantics(
                     container: true,
                     explicitChildNodes: true,
@@ -118,25 +127,24 @@ class _PageShellState extends State<PageShell> {
   }
 }
 
-/// Premium colophon footer — driven by Footer + Settings config.
-class AppFooter extends ConsumerStatefulWidget {
-  const AppFooter({super.key});
+/// Wraps main content so the scroll view always has a box adapter sliver.
+class ContainedLayout extends StatelessWidget {
+  const ContainedLayout({required this.child, super.key});
 
-  @override
-  ConsumerState<AppFooter> createState() => _AppFooterState();
-}
-
-class _AppFooterState extends ConsumerState<AppFooter> {
-  final _emailController = TextEditingController();
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    super.dispose();
-  }
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    return SliverToBoxAdapter(child: child);
+  }
+}
+
+/// Premium colophon footer — driven by Footer + Settings config.
+class AppFooter extends ConsumerWidget {
+  const AppFooter({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(siteSettingsProvider);
     final footer = settings.footer;
     final isDesktop = Responsive.isDesktop(context);
@@ -150,7 +158,7 @@ class _AppFooterState extends ConsumerState<AppFooter> {
           border: Border(top: BorderSide(color: AppColors.border)),
         ),
         child: MaxWidthBox(
-          maxWidth: 1200,
+          maxWidth: AppLayout.pageMaxWidth,
           padding: EdgeInsets.symmetric(
             horizontal: Responsive.pageGutter(context),
             vertical: AppSpacing.section,
@@ -194,13 +202,7 @@ class _AppFooterState extends ConsumerState<AppFooter> {
                         ),
                       ),
                       if (footer.showNewsletter)
-                        Expanded(
-                          child: _FooterNewsletter(
-                            controller: _emailController,
-                            title: footer.newsletterTitle,
-                            blurb: footer.newsletterBlurb,
-                          ),
-                        ),
+                        const Expanded(child: _FooterNewsletter()),
                     ],
                   )
                 else ...[
@@ -214,11 +216,7 @@ class _AppFooterState extends ConsumerState<AppFooter> {
                   ),
                   if (footer.showNewsletter) ...[
                     const SizedBox(height: AppSpacing.xxl),
-                    _FooterNewsletter(
-                      controller: _emailController,
-                      title: footer.newsletterTitle,
-                      blurb: footer.newsletterBlurb,
-                    ),
+                    const _FooterNewsletter(),
                   ],
                 ],
                 const SizedBox(height: AppSpacing.xxxl),
@@ -238,11 +236,13 @@ class _AppFooterState extends ConsumerState<AppFooter> {
                       )
                     : Row(
                         children: [
-                          Text(
-                            '© ${DateTime.now().year} ${settings.legalName}. All rights reserved.',
-                            style: AppTypography.captionStyle,
+                          Flexible(
+                            child: Text(
+                              '© ${DateTime.now().year} ${settings.legalName}. All rights reserved.',
+                              style: AppTypography.captionStyle,
+                            ),
                           ),
-                          const Spacer(),
+                          const SizedBox(width: AppSpacing.lg),
                           _SocialLinks(socials: footer.socials),
                         ],
                       ),
@@ -280,13 +280,18 @@ class _FooterColumnView extends StatelessWidget {
             label: item.label,
             child: HoverOpacity(
               onTap: () => context.go(item.path),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Text(
-                  item.label,
-                  style: AppTypography.bodyStyle.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: 16,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: AppLayout.minTouchTarget,
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    item.label,
+                    style: AppTypography.bodyStyle.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
@@ -326,40 +331,85 @@ class _FooterContact extends StatelessWidget {
           label: 'Email $email',
           child: HoverOpacity(
             onTap: () => context.go(AppRoutes.contact),
-            child: Text(
-              email,
-              style: AppTypography.bodyStyle.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 16,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: AppLayout.minTouchTarget,
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  email,
+                  style: AppTypography.bodyStyle.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
         Text(blurb, style: AppTypography.smallStyle),
       ],
     );
   }
 }
 
-class _FooterNewsletter extends StatelessWidget {
-  const _FooterNewsletter({
-    required this.controller,
-    required this.title,
-    required this.blurb,
-  });
+class _FooterNewsletter extends ConsumerStatefulWidget {
+  const _FooterNewsletter();
 
-  final TextEditingController controller;
-  final String title;
-  final String blurb;
+  @override
+  ConsumerState<_FooterNewsletter> createState() => _FooterNewsletterState();
+}
+
+class _FooterNewsletterState extends ConsumerState<_FooterNewsletter> {
+  final _controller = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _honeypot = TextEditingController();
+  bool _submitted = false;
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _honeypot.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (AppValidators.honeypot(_honeypot.text) != null) {
+      setState(() => _submitted = true);
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    await ref.read(analyticsProvider).track(
+          AnalyticsEvents.newsletterSubmit,
+          properties: {'source': 'footer'},
+        );
+
+    await Future<void>.delayed(const Duration(milliseconds: 700));
+    if (!mounted) return;
+    setState(() {
+      _loading = false;
+      _submitted = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final footer = ref.watch(siteSettingsProvider).footer;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          footer.newsletterTitle,
           style: AppTypography.captionStyle.copyWith(
             fontWeight: FontWeight.w600,
             letterSpacing: 1.1,
@@ -367,57 +417,122 @@ class _FooterNewsletter extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        Text(blurb, style: AppTypography.smallStyle),
+        Text(footer.newsletterBlurb, style: AppTypography.smallStyle),
         const SizedBox(height: AppSpacing.md),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: AppTextField(
-                controller: controller,
-                label: 'Email',
-                hint: 'Email address',
-                keyboardType: TextInputType.emailAddress,
-                autofillHints: const [AutofillHints.email],
-              ),
+        if (_submitted)
+          Text(
+            'You’re on the list. We’ll keep it rare and useful.',
+            style: AppTypography.smallStyle.copyWith(color: AppColors.success),
+          )
+        else
+          Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Offstage(
+                  offstage: true,
+                  child: TextFormField(
+                    controller: _honeypot,
+                    validator: AppValidators.honeypot,
+                    decoration: const InputDecoration(labelText: 'Company url'),
+                  ),
+                ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final stacked = constraints.maxWidth < 280;
+                    final field = AppTextField(
+                      controller: _controller,
+                      label: 'Email',
+                      hint: 'you@company.com',
+                      keyboardType: TextInputType.emailAddress,
+                      autofillHints: const [AutofillHints.email],
+                      validator: AppValidators.email,
+                      onSubmitted: (_) => _submit(),
+                    );
+                    final button = AppButton(
+                      label: _loading ? '…' : 'Join',
+                      size: AppButtonSize.sm,
+                      isLoading: _loading,
+                      onPressed: _loading ? null : _submit,
+                    );
+                    if (stacked) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          field,
+                          const SizedBox(height: AppSpacing.sm),
+                          button,
+                        ],
+                      );
+                    }
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(child: field),
+                        const SizedBox(width: AppSpacing.sm),
+                        button,
+                      ],
+                    );
+                  },
+                ),
+                if (_error != null) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    _error!,
+                    style: AppTypography.captionStyle.copyWith(
+                      color: AppColors.error,
+                    ),
+                  ),
+                ],
+              ],
             ),
-            const SizedBox(width: AppSpacing.sm),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2),
-              child: AppButton(
-                label: 'Join',
-                size: AppButtonSize.sm,
-                onPressed: () {},
-              ),
-            ),
-          ],
-        ),
+          ),
       ],
     );
   }
 }
 
-class _SocialLinks extends StatelessWidget {
+class _SocialLinks extends ConsumerWidget {
   const _SocialLinks({required this.socials});
 
   final List<SocialLink> socials;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Wrap(
-      spacing: AppSpacing.lg,
+      spacing: AppSpacing.md,
+      runSpacing: AppSpacing.sm,
       children: [
         for (final link in socials)
           Semantics(
             link: true,
-            label: link.label,
+            label: '${link.label} (opens in new tab)',
             child: HoverOpacity(
-              onTap: () {},
-              child: Text(
-                link.label,
-                style: AppTypography.captionStyle.copyWith(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w500,
+              onTap: () async {
+                await ref.read(analyticsProvider).track(
+                      AnalyticsEvents.outboundLink,
+                      properties: {
+                        'label': link.label,
+                        'url': link.url,
+                      },
+                    );
+                await ExternalLink.open(link.url);
+              },
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: AppLayout.minTouchTarget,
+                  minWidth: AppLayout.minTouchTarget,
+                ),
+                child: Align(
+                  child: Text(
+                    link.label,
+                    style: AppTypography.captionStyle.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ),
             ),

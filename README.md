@@ -4,80 +4,73 @@ Official website for **StepZero** — a premium business growth studio.
 
 > We don't sell websites. We build businesses people trust.
 
-## Status
+## Stack
 
-This repository currently contains the **production-ready Flutter foundation**:
-
-- Feature-first Clean Architecture
-- Complete design system (color, type, spacing, radius, elevation, motion)
-- Material 3 theme + ThemeExtension tokens
-- Riverpod + GoRouter app shell
-- Responsive desktop-first utilities
-- Reusable UI primitives (buttons, cards, fields, badges, layout)
-
-Marketing page sections are **not** built yet by design.
+| Layer | Choice |
+|---|---|
+| Framework | Flutter (stable) · Material 3 |
+| State | Riverpod |
+| Routing | GoRouter (path URL strategy) |
+| Motion | flutter_animate + custom motion system |
+| Typography | Self-hosted Inter variable |
+| Analytics | Pluggable (GA / PostHog / Clarity / Meta / Hotjar) via `--dart-define` |
 
 ## Architecture
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for every structural decision.
+Feature-first Clean Architecture. See:
 
-## Homepage UX
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — decisions & boundaries
+- [docs/FOLDER_STRUCTURE.md](docs/FOLDER_STRUCTURE.md) — where code lives
+- [docs/CONTENT_SYSTEM.md](docs/CONTENT_SYSTEM.md) — CMS-ready catalogs
+- [docs/CASE_STUDY_SYSTEM.md](docs/CASE_STUDY_SYSTEM.md) — work storytelling
+- [docs/PERFORMANCE_SEO.md](docs/PERFORMANCE_SEO.md) — web vitals & SEO
+- [docs/MOTION.md](docs/MOTION.md) — interaction language
+- [docs/DEPLOY.md](docs/DEPLOY.md) — hosting targets
+- [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) — engineering standards
+- [docs/ROADMAP.md](docs/ROADMAP.md) — what comes next
 
-See [docs/HOMEPAGE_UX_BLUEPRINT.md](docs/HOMEPAGE_UX_BLUEPRINT.md) for the full information architecture, user journey, and wireframe blueprint (no UI code).
+## Setup
 
-## Hero
+```bash
+# Flutter stable ≥ 3.32
+flutter pub get
+flutter run -d chrome
+```
 
-The homepage hero is implemented. Design rationale: [docs/HERO_DESIGN_DECISIONS.md](docs/HERO_DESIGN_DECISIONS.md).
+Quality gates:
 
-## Remaining homepage sections
+```bash
+flutter analyze
+flutter test
+flutter build web --release
+```
 
-All post-hero sections are implemented. Spec: [docs/HOMEPAGE_SECTIONS.md](docs/HOMEPAGE_SECTIONS.md).
+### Analytics (optional)
 
-Production notes: [docs/HOMEPAGE_IMPLEMENTATION.md](docs/HOMEPAGE_IMPLEMENTATION.md).
+Keys are **never** hardcoded. Pass at build time:
 
-## Case studies
-
-Premium case study system (Stripe/Linear × Apple): [docs/CASE_STUDY_SYSTEM.md](docs/CASE_STUDY_SYSTEM.md).
-
-## Content system
-
-CMS-ready collections for Projects, Services, Testimonials, Articles, Team, FAQs, Pricing, Industries, plus config-driven Navigation, Footer, and Settings: [docs/CONTENT_SYSTEM.md](docs/CONTENT_SYSTEM.md).
-
-## Performance & SEO
-
-Lazy loading, self-hosted fonts, Open Graph / Twitter Cards, structured data, and Core Web Vitals guidance: [docs/PERFORMANCE_SEO.md](docs/PERFORMANCE_SEO.md).
-
-## Motion
-
-Reusable motion system (durations, curves, magnetic CTAs, parallax, splash): [docs/MOTION.md](docs/MOTION.md).
-
-## Stack
-
-- Flutter (stable) · Material 3
-- Riverpod · GoRouter · Google Fonts (Inter) · flutter_animate
+```bash
+flutter build web --release \
+  --dart-define=GA_MEASUREMENT_ID=G-XXXX \
+  --dart-define=POSTHOG_KEY=phc_xxxx \
+  --dart-define=POSTHOG_HOST=https://app.posthog.com \
+  --dart-define=CLARITY_ID=xxxx \
+  --dart-define=META_PIXEL_ID=xxxx \
+  --dart-define=HOTJAR_ID=xxxx
+```
 
 ## Project layout
 
 ```
 lib/
-  core/        # Design system, routing, shared primitives
-  features/    # home · content · work · about · contact · …
-  shared/      # Site chrome (nav, footer, page shell)
+  core/           # Design system, SEO, analytics, routing, shared widgets
+  features/       # home · work · content · contact · about · …
+  shared/         # Page shell (nav + footer)
+web/              # index.html, PWA, robots, sitemap, SPA redirects
+docs/             # Architecture & product documentation
 ```
 
-## Getting started
-
-```bash
-flutter pub get
-flutter run -d chrome
-```
-
-```bash
-flutter analyze
-flutter test
-```
-
-## Brand tokens (excerpt)
+## Brand tokens
 
 | Token | Value |
 |---|---|
@@ -87,3 +80,11 @@ flutter test
 | Secondary text | `#6B7280` |
 | Border | `#ECECEC` |
 | Accent | `#5B5FEF` |
+
+## Contact
+
+Production form at `/contact` — validation, honeypot spam placeholder, loading / success / error states, analytics events. Swap `MockContactRepository` for your CRM/API when ready.
+
+## License
+
+Proprietary — StepZero. All rights reserved.

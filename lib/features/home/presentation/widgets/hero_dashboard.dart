@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_layout.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -23,9 +24,48 @@ class HeroDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final w = compact ? 420.0 : 520.0;
-    final h = compact ? 440.0 : 520.0;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final designW = compact ? 420.0 : 520.0;
+        final designH = compact ? 440.0 : 520.0;
+        final maxW = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : designW;
+        final scale = (maxW / designW).clamp(0.55, 1.0);
 
+        return SizedBox(
+          width: designW * scale,
+          height: designH * scale,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            child: RepaintBoundary(
+              child: SizedBox(
+                width: designW,
+                height: designH,
+                child: _DashboardStack(compact: compact, w: designW, h: designH),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _DashboardStack extends StatelessWidget {
+  const _DashboardStack({
+    required this.compact,
+    required this.w,
+    required this.h,
+  });
+
+  final bool compact;
+  final double w;
+  final double h;
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       width: w,
       height: h,
@@ -190,6 +230,8 @@ class _CardLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
       style: AppTypography.captionStyle.copyWith(
         color: AppColors.textTertiary,
         fontWeight: FontWeight.w500,
@@ -211,11 +253,11 @@ class _WebsitePreviewCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            const _Dot(color: Color(0xFFFF5F57)),
+            const _Dot(color: Color(AppLayout.trafficRed)),
             const SizedBox(width: 5),
-            const _Dot(color: Color(0xFFFEBC2E)),
+            const _Dot(color: Color(AppLayout.trafficAmber)),
             const SizedBox(width: 5),
-            const _Dot(color: Color(0xFF28C840)),
+            const _Dot(color: Color(AppLayout.trafficGreen)),
             const SizedBox(width: 10),
             Expanded(
               child: Container(
@@ -528,7 +570,7 @@ class _ChatbotCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            const _CardLabel('AI Chatbot'),
+            const Expanded(child: _CardLabel('AI Chatbot')),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),

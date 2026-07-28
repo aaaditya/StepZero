@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
   late final Animation<double> _floatAnimation;
   bool _hovered = false;
   bool _floatArmed = false;
+  Timer? _armTimer;
 
   @override
   void initState() {
@@ -68,7 +70,7 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
     );
 
     if (widget.float) {
-      Future<void>.delayed(widget.floatDelay, () {
+      _armTimer = Timer(widget.floatDelay, () {
         if (!mounted) return;
         _floatArmed = true;
         _maybeStartFloat();
@@ -97,6 +99,7 @@ class _FloatingGlassCardState extends State<FloatingGlassCard>
 
   @override
   void dispose() {
+    _armTimer?.cancel();
     _floatController.dispose();
     super.dispose();
   }

@@ -19,6 +19,17 @@ abstract final class AppRoutes {
   static String article(String slug) => '/articles/$slug';
   static String industry(String slug) => '/industries/$slug';
 
+  /// Accepts only URL-safe slugs — rejects path traversal / junk.
+  static final RegExp slugPattern = RegExp(r'^[a-z0-9]+(?:-[a-z0-9]+)*$');
+
+  static String? sanitizeSlug(String? raw) {
+    if (raw == null) return null;
+    final slug = raw.trim();
+    if (slug.isEmpty || slug.length > 80) return null;
+    if (!slugPattern.hasMatch(slug)) return null;
+    return slug;
+  }
+
   static const List<String> all = [
     home,
     services,

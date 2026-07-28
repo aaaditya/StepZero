@@ -55,10 +55,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: ':slug',
                 name: 'service',
                 pageBuilder: (context, state) {
-                  final slug = state.pathParameters['slug'] ?? '';
+                  final slug =
+                      AppRoutes.sanitizeSlug(state.pathParameters['slug']);
                   return _fadePage(
                     state: state,
-                    child: ServiceDetailPage(slug: slug),
+                    child: slug == null
+                        ? const _NotFoundView(uri: 'Invalid service')
+                        : ServiceDetailPage(slug: slug),
                   );
                 },
               ),
@@ -76,10 +79,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: ':slug',
                 name: 'case-study',
                 pageBuilder: (context, state) {
-                  final slug = state.pathParameters['slug'] ?? '';
+                  final slug =
+                      AppRoutes.sanitizeSlug(state.pathParameters['slug']);
                   return _fadePage(
                     state: state,
-                    child: CaseStudyPage(slug: slug),
+                    child: slug == null
+                        ? const _NotFoundView(uri: 'Invalid case study')
+                        : CaseStudyPage(slug: slug),
                   );
                 },
               ),
@@ -97,10 +103,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: ':slug',
                 name: 'article',
                 pageBuilder: (context, state) {
-                  final slug = state.pathParameters['slug'] ?? '';
+                  final slug =
+                      AppRoutes.sanitizeSlug(state.pathParameters['slug']);
                   return _fadePage(
                     state: state,
-                    child: ArticleDetailPage(slug: slug),
+                    child: slug == null
+                        ? const _NotFoundView(uri: 'Invalid article')
+                        : ArticleDetailPage(slug: slug),
                   );
                 },
               ),
@@ -150,10 +159,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: ':slug',
                 name: 'industry',
                 pageBuilder: (context, state) {
-                  final slug = state.pathParameters['slug'] ?? '';
+                  final slug =
+                      AppRoutes.sanitizeSlug(state.pathParameters['slug']);
                   return _fadePage(
                     state: state,
-                    child: IndustryDetailPage(slug: slug),
+                    child: slug == null
+                        ? const _NotFoundView(uri: 'Invalid industry')
+                        : IndustryDetailPage(slug: slug),
                   );
                 },
               ),

@@ -78,9 +78,8 @@ class _AppButtonState extends State<AppButton> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context);
     final reduce = MotionAccessibility.reduceMotion(context);
-    final padding = _paddingFor(widget.size, compact: isMobile);
+    final padding = _paddingFor(widget.size);
     final colors = _colorsFor(widget.variant, hovered: _hovered);
     final glow = widget.variant == AppButtonVariant.primary &&
         (_hovered || widget.pulse);
@@ -170,7 +169,7 @@ class _AppButtonState extends State<AppButton> {
       );
     }
 
-    if (widget.magnetic && !isMobile) {
+    if (widget.magnetic && !Responsive.isMobile(context)) {
       child = Magnetic(
         enabled: _enabled && !reduce,
         child: child,
@@ -208,19 +207,20 @@ class _AppButtonState extends State<AppButton> {
     );
   }
 
-  EdgeInsets _paddingFor(AppButtonSize size, {required bool compact}) {
+  EdgeInsets _paddingFor(AppButtonSize size) {
+    // Enforce ≥ 48px touch target height (padding + ~20px label).
     return switch (size) {
       AppButtonSize.sm => const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
+          vertical: 14,
         ),
-      AppButtonSize.md => EdgeInsets.symmetric(
+      AppButtonSize.md => const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,
-          vertical: compact ? AppSpacing.sm : AppSpacing.md,
+          vertical: 14,
         ),
       AppButtonSize.lg => const EdgeInsets.symmetric(
           horizontal: AppSpacing.xl,
-          vertical: AppSpacing.md + 2,
+          vertical: 16,
         ),
     };
   }

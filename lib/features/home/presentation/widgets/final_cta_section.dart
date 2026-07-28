@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/animations/parallax.dart';
+import '../../../../core/constants/app_layout.dart';
 import '../../../../core/constants/curves.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -38,7 +39,7 @@ class FinalCtaSection extends StatelessWidget {
             borderRadius: AppRadius.xxlAll,
             colors: [
               AppColors.textPrimary,
-              const Color(0xFF1A1A2E),
+              const Color(AppLayout.ctaMid),
               AppColors.accent.withValues(alpha: 0.9),
             ],
             child: Container(
@@ -128,7 +129,8 @@ class FinalCtaSection extends StatelessWidget {
                     'Limited projects each quarter. Serious inquiries only.',
                     textAlign: TextAlign.center,
                     style: AppTypography.captionStyle.copyWith(
-                      color: AppColors.textInverse.withValues(alpha: 0.55),
+                      // ≥ 4.5:1 on dark wash — avoid washed-out grey.
+                      color: AppColors.textInverse.withValues(alpha: 0.78),
                     ),
                   ),
                 ],

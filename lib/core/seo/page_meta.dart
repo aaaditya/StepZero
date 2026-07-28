@@ -1,10 +1,12 @@
+import '../constants/brand.dart';
+
 /// Page-level SEO / Open Graph / Twitter Card metadata.
 class PageMeta {
   const PageMeta({
     required this.title,
     required this.description,
     required this.path,
-    this.imageUrl = BrandDefaults.ogImage,
+    this.imageUrl = Brand.defaultOgImage,
     this.type = 'website',
     this.noIndex = false,
     this.jsonLd,
@@ -18,7 +20,7 @@ class PageMeta {
   final bool noIndex;
   final Map<String, Object?>? jsonLd;
 
-  String get canonicalUrl => '${BrandDefaults.siteUrl}$path';
+  String get canonicalUrl => '${Brand.siteUrl}$path';
 
   PageMeta copyWith({
     String? title,
@@ -41,14 +43,11 @@ class PageMeta {
   }
 }
 
-/// Mirrors [Brand] constants without importing Flutter.
+/// SEO-facing aliases over [Brand] — keep crawler code stable.
 abstract final class BrandDefaults {
-  static const String siteUrl = 'https://stepzero.studio';
-  static const String ogImage = '$siteUrl/og-image.png';
-  static const String name = 'StepZero';
-  static const String defaultTitle =
-      'StepZero — We build businesses people trust';
-  static const String defaultDescription =
-      'StepZero helps local businesses become premium brands through '
-      'strategy, branding, websites, AI automation, and digital growth.';
+  static const String siteUrl = Brand.siteUrl;
+  static const String ogImage = Brand.defaultOgImage;
+  static const String name = Brand.name;
+  static const String defaultTitle = Brand.defaultTitle;
+  static const String defaultDescription = Brand.defaultDescription;
 }

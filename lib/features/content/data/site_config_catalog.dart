@@ -58,9 +58,9 @@ abstract final class SiteConfigCatalog {
       newsletterTitle: 'Newsletter',
       newsletterBlurb: 'Operator notes. No spam.',
       socials: [
-        SocialLink(label: 'Instagram', url: 'https://instagram.com'),
-        SocialLink(label: 'LinkedIn', url: 'https://linkedin.com'),
-        SocialLink(label: 'X', url: 'https://x.com'),
+        SocialLink(label: 'Instagram', url: 'https://instagram.com/stepzero'),
+        SocialLink(label: 'LinkedIn', url: 'https://linkedin.com/company/stepzero'),
+        SocialLink(label: 'X', url: 'https://x.com/stepzero'),
       ],
     ),
   );
