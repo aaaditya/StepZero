@@ -39,11 +39,37 @@ See `cloudflare-pages.md`.
 
 ## Vercel
 
-1. Build in CI (or a custom install script that installs Flutter).
-2. Output: `build/web`.
-3. `vercel.json` provides SPA rewrites + cache headers.
+### Why builds fail on `main`
 
-If using Vercel’s UI only, set **Output Directory** to `build/web` after a CI artifact upload, or use a Docker/Flutter install build step.
+`main` must contain `pubspec.yaml` and the Flutter app. If Vercel clones an
+empty / README-only commit, you will see:
+
+```text
+Expected to find project root in current working directory.
+```
+
+**Fix:** merge a feature PR into `main`, or in Vercel → Settings → Git set
+**Production Branch** to a branch that has the app (e.g. `cursor/stepzero-foundation-9169`).
+
+### Project settings
+
+| Setting | Value |
+|---|---|
+| Framework Preset | Other |
+| Build Command | `bash scripts/vercel-build.sh` (also in `vercel.json`) |
+| Output Directory | `build/web` |
+| Install Command | leave empty / ignore (Flutter installs in the build script) |
+| Root Directory | `.` (repo root) |
+
+`scripts/vercel-build.sh` clones Flutter stable, enables web, runs
+`flutter pub get` and `flutter build web --release`.
+
+`vercel.json` also sets SPA rewrites so deep links work on refresh.
+
+### Optional analytics env vars
+
+Add in Vercel → Settings → Environment Variables, then extend the build script
+or append `--dart-define=...` flags.
 
 ---
 

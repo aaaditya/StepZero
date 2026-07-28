@@ -1,4 +1,8 @@
 {
+  "buildCommand": "bash scripts/vercel-build.sh",
+  "outputDirectory": "build/web",
+  "framework": null,
+  "installCommand": "echo 'Flutter install handled in buildCommand'",
   "rewrites": [
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ],
