@@ -19,9 +19,6 @@ dependencies:
   # Declarative, URL-based navigation for Flutter web
   go_router: ^17.0.0
 
-  # Inter typeface via Google Fonts CDN (self-host later for prod perf)
-  google_fonts: ^6.3.2
-
   # Declarative, performant motion primitives
   flutter_animate: ^4.5.2
 
@@ -36,3 +33,8 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Variable.ttf

@@ -9,6 +9,8 @@ export 'expandable_surface_card.dart';
 export 'floating_glass_card.dart';
 export 'glass_app_bar.dart';
 export 'hero_canvas.dart';
+export 'lazy_section.dart';
+export 'optimized_image.dart';
 export 'pill_badge.dart';
 export 'responsive_builder.dart';
 export 'reveal.dart';

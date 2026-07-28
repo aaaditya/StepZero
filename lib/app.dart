@@ -17,7 +17,8 @@ class StepZeroApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: Brand.name,
+      title: Brand.defaultTitle,
+      onGenerateTitle: (_) => Brand.defaultTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       themeMode: ThemeMode.light,

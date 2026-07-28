@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/lazy_section.dart';
 import '../widgets/faq_section.dart';
 import '../widgets/featured_work_section.dart';
 import '../widgets/final_cta_section.dart';
@@ -12,8 +13,7 @@ import '../widgets/testimonials_section.dart';
 import '../widgets/transformation_section.dart';
 import '../widgets/why_stepzero_section.dart';
 
-/// Complete StepZero homepage — composed exclusively from design-system
-/// primitives and feature section modules.
+/// Complete StepZero homepage — above-the-fold eager, below-fold lazy.
 ///
 /// Footer lives in [PageShell] (sticky glass nav + smooth scroll).
 class HomePage extends StatelessWidget {
@@ -21,19 +21,50 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        HeroSection(),
-        TransformationSection(),
-        HowWeTransformSection(),
-        FeaturedWorkSection(),
-        TestimonialsSection(),
-        IndustriesSection(),
-        WhyStepZeroSection(),
-        ProcessSection(),
-        InsightsSection(),
-        FaqSection(),
-        FinalCtaSection(),
+        // Critical path — paint immediately for LCP / FCP.
+        const HeroSection(),
+        LazySection(
+          eager: true,
+          builder: (_) => const TransformationSection(),
+        ),
+        LazySection(
+          placeholderHeight: 720,
+          builder: (_) => const HowWeTransformSection(),
+        ),
+        LazySection(
+          placeholderHeight: 900,
+          builder: (_) => const FeaturedWorkSection(),
+        ),
+        LazySection(
+          placeholderHeight: 560,
+          builder: (_) => const TestimonialsSection(),
+        ),
+        LazySection(
+          placeholderHeight: 640,
+          builder: (_) => const IndustriesSection(),
+        ),
+        LazySection(
+          placeholderHeight: 720,
+          builder: (_) => const WhyStepZeroSection(),
+        ),
+        LazySection(
+          placeholderHeight: 640,
+          builder: (_) => const ProcessSection(),
+        ),
+        LazySection(
+          placeholderHeight: 720,
+          builder: (_) => const InsightsSection(),
+        ),
+        LazySection(
+          placeholderHeight: 640,
+          builder: (_) => const FaqSection(),
+        ),
+        LazySection(
+          placeholderHeight: 480,
+          builder: (_) => const FinalCtaSection(),
+        ),
       ],
     );
   }

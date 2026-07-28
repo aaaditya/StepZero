@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
-/// StepZero typography scale — Inter only.
+/// StepZero typography scale — self-hosted Inter (no CDN on critical path).
 ///
-/// Editorial hierarchy with generous sizes for desktop-first marketing.
-/// Line heights and letter-spacing tuned for premium web readability.
+/// Bundled variable font improves LCP / font CLS vs runtime Google Fonts fetch.
 abstract final class AppTypography {
+  static const String fontFamily = 'Inter';
+
   // ─── Scale (px) ─────────────────────────────────────────────
   static const double hero = 80;
   static const double headingXl = 56;
@@ -26,12 +26,20 @@ abstract final class AppTypography {
     double letterSpacing = 0,
     Color? color,
   }) {
-    return GoogleFonts.inter(
+    return TextStyle(
+      fontFamily: fontFamily,
       fontSize: size,
       fontWeight: weight,
       height: height,
       letterSpacing: letterSpacing,
       color: color ?? AppColors.textPrimary,
+      fontFamilyFallback: const [
+        'system-ui',
+        '-apple-system',
+        'Segoe UI',
+        'Roboto',
+        'sans-serif',
+      ],
     );
   }
 

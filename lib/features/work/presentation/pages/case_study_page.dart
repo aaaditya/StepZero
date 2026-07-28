@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/routes.dart';
+import '../../../../core/seo/page_meta.dart';
+import '../../../../core/seo/seo_effect.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -57,8 +59,22 @@ class _CaseStudyPageState extends ConsumerState<CaseStudyPage> {
 
     final next = ref.watch(caseStudyProvider(study.nextSlug));
     final isDesktop = Responsive.isDesktop(context);
+    final path = AppRoutes.caseStudy(study.slug);
 
-    return SectionLandmark(
+    return SeoEffect(
+      meta: PageMeta(
+        title: '${study.name} — ${study.headline} · StepZero',
+        description: study.challenge,
+        path: path,
+        type: 'article',
+        jsonLd: StructuredData.caseStudy(
+          name: study.name,
+          headline: study.headline,
+          path: path,
+          industry: study.overview.industry,
+        ),
+      ),
+      child: SectionLandmark(
       label: '${study.name} case study',
       child: PageBody(
         child: MaxWidthBox(
@@ -97,6 +113,7 @@ class _CaseStudyPageState extends ConsumerState<CaseStudyPage> {
                 ),
         ),
       ),
+    ),
     );
   }
 

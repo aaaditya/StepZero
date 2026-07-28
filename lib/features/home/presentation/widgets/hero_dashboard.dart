@@ -373,10 +373,12 @@ class _MetricCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
-        CustomPaint(
-          size: const Size(120, 28),
-          painter: _SparklinePainter(
-            color: positive ? AppColors.success : AppColors.accent,
+        ExcludeSemantics(
+          child: CustomPaint(
+            size: const Size(120, 28),
+            painter: _SparklinePainter(
+              color: positive ? AppColors.success : AppColors.accent,
+            ),
           ),
         ),
       ],
@@ -458,7 +460,9 @@ class _QrMenuCard extends StatelessWidget {
             color: AppColors.surfaceMuted,
             borderRadius: AppRadius.smAll,
           ),
-          child: CustomPaint(painter: _QrPainter()),
+          child: ExcludeSemantics(
+            child: CustomPaint(painter: _QrPainter()),
+          ),
         ),
       ],
     );

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/routes.dart';
+import '../../../../core/seo/page_meta.dart';
+import '../../../../core/seo/seo_effect.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_elevation.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -88,7 +90,20 @@ class ArticleDetailPage extends ConsumerWidget {
       return const ContentEmptyState(title: 'Article not found');
     }
 
-    return ContentPageScaffold(
+    return SeoEffect(
+      meta: PageMeta(
+        title: '${article.title} · StepZero',
+        description: article.dek,
+        path: AppRoutes.article(article.slug),
+        type: 'article',
+        jsonLd: StructuredData.article(
+          title: article.title,
+          description: article.dek,
+          path: AppRoutes.article(article.slug),
+          datePublished: article.publishedAt,
+        ),
+      ),
+      child: ContentPageScaffold(
       landmark: article.title,
       eyebrow: article.tag,
       title: article.title,
@@ -105,6 +120,7 @@ class ArticleDetailPage extends ConsumerWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }

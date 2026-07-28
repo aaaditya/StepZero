@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/curves.dart';
 import '../../../../core/constants/durations.dart';
+import '../../../../core/routing/routes.dart';
+import '../../../../core/seo/page_meta.dart';
+import '../../../../core/seo/seo_effect.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -26,7 +29,17 @@ class _FaqPageState extends ConsumerState<FaqPage> {
   Widget build(BuildContext context) {
     final items = ref.watch(faqsProvider);
 
-    return ContentPageScaffold(
+    return SeoEffect(
+      meta: PageMeta(
+        title: 'FAQ · StepZero',
+        description:
+            'Straight answers about engagements, timelines, and how StepZero works.',
+        path: AppRoutes.faq,
+        jsonLd: StructuredData.faq([
+          for (final item in items) (q: item.question, a: item.answer),
+        ]),
+      ),
+      child: ContentPageScaffold(
       landmark: 'FAQ',
       eyebrow: 'FAQ',
       title: 'Straight answers.',
@@ -54,6 +67,7 @@ class _FaqPageState extends ConsumerState<FaqPage> {
           ],
         ],
       ),
+    ),
     );
   }
 }

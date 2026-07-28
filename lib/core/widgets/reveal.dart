@@ -106,12 +106,15 @@ class StaggeredReveal extends StatelessWidget {
   }
 }
 
-/// Semantic landmark wrapper for homepage sections.
+/// Semantic landmark wrapper for marketing sections.
+///
+/// [header] defaults to false — put `Semantics(header: true)` on titles
+/// ([SectionHeader]) so landmark trees stay clean for screen readers.
 class SectionLandmark extends StatelessWidget {
   const SectionLandmark({
     required this.label,
     required this.child,
-    this.header = true,
+    this.header = false,
     super.key,
   });
 

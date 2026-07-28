@@ -25,7 +25,7 @@ abstract final class AppTheme {
       canvasColor: AppColors.background,
       textTheme: textTheme,
       primaryTextTheme: textTheme,
-      fontFamily: 'Inter',
+      fontFamily: AppTypography.fontFamily,
       extensions: const <ThemeExtension<dynamic>>[
         StepZeroTheme.light,
       ],
@@ -36,7 +36,6 @@ abstract final class AppTheme {
         foregroundColor: AppColors.textPrimary,
         surfaceTintColor: Colors.transparent,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
-        titleTextStyle: null, // set via GoogleFonts at call site / nav
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.border,

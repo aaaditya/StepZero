@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/animations/hover_effects.dart';
 import '../../core/routing/routes.dart';
+import '../../core/seo/seo_controller.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -12,6 +13,7 @@ import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_container.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/glass_app_bar.dart';
+import '../../core/widgets/lazy_section.dart';
 import '../../core/widgets/reveal.dart';
 import '../../features/content/domain/site_config.dart';
 import '../../features/content/presentation/providers/content_providers.dart';
@@ -33,12 +35,29 @@ class PageShell extends StatefulWidget {
 
 class _PageShellState extends State<PageShell> {
   final _scrollController = ScrollController();
+  final _mainContentKey = GlobalKey();
   bool _scrolled = false;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _applySeo();
+  }
+
+  @override
+  void didUpdateWidget(covariant PageShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.location != widget.location) {
+      _applySeo();
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
+    }
+  }
+
+  void _applySeo() {
+    SeoController.apply(SeoController.forPath(widget.location));
   }
 
   void _onScroll() {
@@ -58,30 +77,42 @@ class _PageShellState extends State<PageShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics(),
+    return ShellScroll(
+      controller: _scrollController,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: Stack(
+          children: [
+            CustomScrollView(
+              key: _mainContentKey,
+              controller: _scrollController,
+              primary: false,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Semantics(
+                    container: true,
+                    explicitChildNodes: true,
+                    label: 'Main content',
+                    child: widget.child,
+                  ),
+                ),
+                const SliverToBoxAdapter(child: AppFooter()),
+              ],
             ),
-            slivers: [
-              SliverToBoxAdapter(child: widget.child),
-              const SliverToBoxAdapter(child: AppFooter()),
-            ],
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: GlassAppBar(
-              location: widget.location,
-              scrolled: _scrolled,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: GlassAppBar(
+                location: widget.location,
+                scrolled: _scrolled,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

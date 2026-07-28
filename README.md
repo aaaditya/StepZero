@@ -43,6 +43,10 @@ Premium case study system (Stripe/Linear × Apple): [docs/CASE_STUDY_SYSTEM.md](
 
 CMS-ready collections for Projects, Services, Testimonials, Articles, Team, FAQs, Pricing, Industries, plus config-driven Navigation, Footer, and Settings: [docs/CONTENT_SYSTEM.md](docs/CONTENT_SYSTEM.md).
 
+## Performance & SEO
+
+Lazy loading, self-hosted fonts, Open Graph / Twitter Cards, structured data, and Core Web Vitals guidance: [docs/PERFORMANCE_SEO.md](docs/PERFORMANCE_SEO.md).
+
 ## Stack
 
 - Flutter (stable) · Material 3
