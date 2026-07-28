@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/hero_canvas.dart';
 import '../../../../core/widgets/responsive_builder.dart';
+import '../../../../core/widgets/reveal.dart';
 import 'hero_copy_column.dart';
 import 'hero_dashboard.dart';
 
@@ -78,14 +79,17 @@ class HeroSection extends StatelessWidget {
             ),
     );
 
-    return (stacked
-            ? ConstrainedBox(
-                constraints: BoxConstraints(minHeight: screenHeight),
-                child: SizedBox(width: double.infinity, child: canvas),
-              )
-            : canvas)
-        .animate()
-        .fadeIn(duration: 400.ms, curve: AppCurves.enter);
+    return SectionLandmark(
+      label: 'Hero',
+      child: (stacked
+              ? ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: screenHeight),
+                  child: SizedBox(width: double.infinity, child: canvas),
+                )
+              : canvas)
+          .animate()
+          .fadeIn(duration: 400.ms, curve: AppCurves.enter),
+    );
   }
 }
 

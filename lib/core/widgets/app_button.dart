@@ -135,23 +135,28 @@ class _AppButtonState extends State<AppButton> {
       ),
     );
 
-    return FocusableActionDetector(
+    return Semantics(
+      button: true,
       enabled: _enabled,
-      onShowFocusHighlight: (focused) => setState(() => _focused = focused),
-      onShowHoverHighlight: (hovered) => setState(() => _hovered = hovered),
-      mouseCursor:
-          _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      actions: <Type, Action<Intent>>{
-        ActivateIntent: CallbackAction<ActivateIntent>(
-          onInvoke: (_) {
-            widget.onPressed?.call();
-            return null;
-          },
+      label: widget.label,
+      child: FocusableActionDetector(
+        enabled: _enabled,
+        onShowFocusHighlight: (focused) => setState(() => _focused = focused),
+        onShowHoverHighlight: (hovered) => setState(() => _hovered = hovered),
+        mouseCursor:
+            _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+        actions: <Type, Action<Intent>>{
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) {
+              widget.onPressed?.call();
+              return null;
+            },
+          ),
+        },
+        child: GestureDetector(
+          onTap: _enabled ? widget.onPressed : null,
+          child: widget.expand ? child : IntrinsicWidth(child: child),
         ),
-      },
-      child: GestureDetector(
-        onTap: _enabled ? widget.onPressed : null,
-        child: widget.expand ? child : IntrinsicWidth(child: child),
       ),
     );
   }

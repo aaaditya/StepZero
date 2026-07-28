@@ -55,15 +55,18 @@ class SectionHeader extends StatelessWidget {
         ],
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxTitleWidth),
-          child: Text(
-            title,
-            style: AppTypography.headingLStyle.copyWith(
-              fontSize: titleSize,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -1.2,
-              height: 1.1,
+          child: Semantics(
+            header: true,
+            child: Text(
+              title,
+              style: AppTypography.headingLStyle.copyWith(
+                fontSize: titleSize,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -1.2,
+                height: 1.1,
+              ),
+              textAlign: _centered ? TextAlign.center : TextAlign.start,
             ),
-            textAlign: _centered ? TextAlign.center : TextAlign.start,
           ),
         ),
         if (subtitle != null) ...[

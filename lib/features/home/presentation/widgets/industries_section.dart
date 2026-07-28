@@ -8,6 +8,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/app_container.dart';
 import '../../../../core/widgets/expandable_surface_card.dart';
+import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
 
 class _Industry {
@@ -77,7 +78,9 @@ class IndustriesSection extends StatelessWidget {
             ? 2
             : 1;
 
-    return SectionContainer(
+    return SectionLandmark(
+      label: 'Industries',
+      child: SectionContainer(
       maxWidth: 1200,
       backgroundColor: AppColors.surfaceMuted,
       child: Column(
@@ -113,6 +116,7 @@ class IndustriesSection extends StatelessWidget {
             },
           ),
         ],
+      ),
       ),
     );
   }

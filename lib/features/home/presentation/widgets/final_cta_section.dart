@@ -11,6 +11,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_container.dart';
+import '../../../../core/widgets/reveal.dart';
 
 /// Inevitable close — calm invitation, not a hard sell banner.
 class FinalCtaSection extends StatelessWidget {
@@ -25,7 +26,9 @@ class FinalCtaSection extends StatelessWidget {
       mobile: 32,
     );
 
-    return SectionContainer(
+    return SectionLandmark(
+      label: 'Call to action',
+      child: SectionContainer(
       maxWidth: 1000,
       child: Container(
         width: double.infinity,
@@ -126,6 +129,7 @@ class FinalCtaSection extends StatelessWidget {
           .animate()
           .fadeIn(duration: 550.ms, curve: AppCurves.enter)
           .moveY(begin: 18, end: 0, duration: 600.ms, curve: AppCurves.enter),
+      ),
     );
   }
 }

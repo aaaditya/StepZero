@@ -8,6 +8,7 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_container.dart';
+import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
 
 class _FaqItem {
@@ -58,7 +59,9 @@ class _FaqSectionState extends State<FaqSection> {
 
   @override
   Widget build(BuildContext context) {
-    return SectionContainer(
+    return SectionLandmark(
+      label: 'Frequently asked questions',
+      child: SectionContainer(
       maxWidth: 800,
       backgroundColor: AppColors.surfaceMuted,
       child: Column(
@@ -87,6 +90,7 @@ class _FaqSectionState extends State<FaqSection> {
             if (i != _items.length - 1) const SizedBox(height: AppSpacing.sm),
           ],
         ],
+      ),
       ),
     );
   }

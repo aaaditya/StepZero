@@ -1,12 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/animations/hover_effects.dart';
 import '../../core/constants/brand.dart';
-import '../../core/constants/curves.dart';
 import '../../core/routing/routes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -14,11 +10,12 @@ import '../../core/theme/app_typography.dart';
 import '../../core/utils/responsive.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_container.dart';
+import '../../core/widgets/app_text_field.dart';
+import '../../core/widgets/glass_app_bar.dart';
+import '../../core/widgets/reveal.dart';
 
-/// Persistent site chrome — overlay nav + scrollable body + footer.
-///
-/// Nav floats above the hero so marketing sections can claim true 100vh.
-class PageShell extends StatelessWidget {
+/// Persistent site chrome — sticky glass nav + smooth scroll body + footer.
+class PageShell extends StatefulWidget {
   const PageShell({
     required this.child,
     required this.location,
@@ -29,14 +26,47 @@ class PageShell extends StatelessWidget {
   final String location;
 
   @override
+  State<PageShell> createState() => _PageShellState();
+}
+
+class _PageShellState extends State<PageShell> {
+  final _scrollController = ScrollController();
+  bool _scrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final next = _scrollController.offset > 12;
+    if (next != _scrolled) {
+      setState(() => _scrolled = next);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
           CustomScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
             slivers: [
-              SliverToBoxAdapter(child: child),
+              SliverToBoxAdapter(child: widget.child),
               const SliverToBoxAdapter(child: AppFooter()),
             ],
           ),
@@ -44,15 +74,10 @@ class PageShell extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: AppNavBar(location: location)
-                .animate()
-                .fadeIn(duration: 500.ms, curve: AppCurves.enter)
-                .moveY(
-                  begin: -8,
-                  end: 0,
-                  duration: 500.ms,
-                  curve: AppCurves.enter,
-                ),
+            child: GlassAppBar(
+              location: widget.location,
+              scrolled: _scrolled,
+            ),
           ),
         ],
       ),
@@ -60,153 +85,7 @@ class PageShell extends StatelessWidget {
   }
 }
 
-/// Top navigation — desktop links, mobile menu trigger.
-class AppNavBar extends StatelessWidget {
-  const AppNavBar({
-    required this.location,
-    super.key,
-  });
-
-  final String location;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDesktop = Responsive.isDesktop(context);
-
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: AppColors.background.withValues(alpha: 0.78),
-            border: const Border(
-              bottom: BorderSide(color: AppColors.border),
-            ),
-          ),
-          child: SafeArea(
-            bottom: false,
-            child: SizedBox(
-              height: 72,
-              child: MaxWidthBox(
-                maxWidth: 1440,
-                padding: EdgeInsets.symmetric(
-                  horizontal: Responsive.pageGutter(context),
-                ),
-                child: Row(
-                  children: [
-                    HoverOpacity(
-                      onTap: () => context.go(AppRoutes.home),
-                      child: Text(
-                        Brand.name,
-                        style: AppTypography.headingSStyle.copyWith(
-                          fontSize: 22,
-                          letterSpacing: -0.4,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    if (isDesktop) ...[
-                      for (final item in AppNav.primary) ...[
-                        _NavLink(
-                          label: item.label,
-                          path: item.path,
-                          selected: location == item.path,
-                        ),
-                        const SizedBox(width: AppSpacing.lg),
-                      ],
-                      AppButton(
-                        label: Brand.primaryCta,
-                        size: AppButtonSize.sm,
-                        onPressed: () => context.go(AppRoutes.contact),
-                      ),
-                    ] else
-                      IconButton(
-                        tooltip: 'Menu',
-                        onPressed: () => _openMobileMenu(context),
-                        icon: const Icon(Icons.menu_rounded),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _openMobileMenu(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final item in AppNav.primary)
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      item.label,
-                      style: AppTypography.headingSStyle.copyWith(fontSize: 22),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.go(item.path);
-                    },
-                  ),
-                const SizedBox(height: AppSpacing.lg),
-                AppButton(
-                  label: Brand.primaryCta,
-                  expand: true,
-                  onPressed: () {
-                    Navigator.pop(context);
-                    context.go(AppRoutes.contact);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _NavLink extends StatelessWidget {
-  const _NavLink({
-    required this.label,
-    required this.path,
-    required this.selected,
-  });
-
-  final String label;
-  final String path;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    return HoverOpacity(
-      onTap: () => context.go(path),
-      child: Text(
-        label,
-        style: AppTypography.navLabel.copyWith(
-          color: selected ? AppColors.textPrimary : AppColors.textSecondary,
-          fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
-/// Site footer — large brand mark, utility nav, contact, newsletter.
+/// Premium colophon footer — brand gravity + utility.
 class AppFooter extends StatefulWidget {
   const AppFooter({super.key});
 
@@ -227,81 +106,92 @@ class _AppFooterState extends State<AppFooter> {
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
 
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.border)),
-      ),
-      child: MaxWidthBox(
-        maxWidth: 1200,
-        padding: EdgeInsets.symmetric(
-          horizontal: Responsive.pageGutter(context),
-          vertical: AppSpacing.section,
+    return SectionLandmark(
+      label: 'Footer',
+      header: false,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
+          border: Border(top: BorderSide(color: AppColors.border)),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              Brand.name,
-              style: AppTypography.displayHero.copyWith(
-                fontSize: Responsive.fluidFontSize(
-                  context,
-                  desktop: 72,
-                  tablet: 56,
-                  mobile: 40,
+        child: MaxWidthBox(
+          maxWidth: 1200,
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.pageGutter(context),
+            vertical: AppSpacing.section,
+          ),
+          child: Reveal(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    Brand.name,
+                    style: AppTypography.displayHero.copyWith(
+                      fontSize: Responsive.fluidFontSize(
+                        context,
+                        desktop: 72,
+                        tablet: 56,
+                        mobile: 40,
+                      ),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -2,
+                    ),
+                  ),
                 ),
-                fontWeight: FontWeight.w700,
-                letterSpacing: -2,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              Brand.tagline,
-              style: AppTypography.bodyLargeStyle,
-            ),
-            const SizedBox(height: AppSpacing.xxxl),
-            if (isDesktop)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: _FooterNav()),
-                  Expanded(child: _FooterContact()),
-                  Expanded(child: _FooterNewsletter(controller: _emailController)),
-                ],
-              )
-            else ...[
-              _FooterNav(),
-              const SizedBox(height: AppSpacing.xxl),
-              _FooterContact(),
-              const SizedBox(height: AppSpacing.xxl),
-              _FooterNewsletter(controller: _emailController),
-            ],
-            const SizedBox(height: AppSpacing.xxxl),
-            const Divider(color: AppColors.border),
-            const SizedBox(height: AppSpacing.xl),
-            Responsive.isMobile(context)
-                ? Column(
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  Brand.tagline,
+                  style: AppTypography.bodyLargeStyle,
+                ),
+                const SizedBox(height: AppSpacing.xxxl),
+                if (isDesktop)
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '© ${DateTime.now().year} ${Brand.legalName}',
-                        style: AppTypography.captionStyle,
+                      const Expanded(child: _FooterNav()),
+                      const Expanded(child: _FooterContact()),
+                      Expanded(
+                        child: _FooterNewsletter(controller: _emailController),
                       ),
-                      const SizedBox(height: AppSpacing.md),
-                      const _SocialLinks(),
                     ],
                   )
-                : Row(
-                    children: [
-                      Text(
-                        '© ${DateTime.now().year} ${Brand.legalName}. All rights reserved.',
-                        style: AppTypography.captionStyle,
+                else ...[
+                  const _FooterNav(),
+                  const SizedBox(height: AppSpacing.xxl),
+                  const _FooterContact(),
+                  const SizedBox(height: AppSpacing.xxl),
+                  _FooterNewsletter(controller: _emailController),
+                ],
+                const SizedBox(height: AppSpacing.xxxl),
+                const Divider(color: AppColors.border),
+                const SizedBox(height: AppSpacing.xl),
+                Responsive.isMobile(context)
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '© ${DateTime.now().year} ${Brand.legalName}',
+                            style: AppTypography.captionStyle,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          const _SocialLinks(),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          Text(
+                            '© ${DateTime.now().year} ${Brand.legalName}. All rights reserved.',
+                            style: AppTypography.captionStyle,
+                          ),
+                          const Spacer(),
+                          const _SocialLinks(),
+                        ],
                       ),
-                      const Spacer(),
-                      const _SocialLinks(),
-                    ],
-                  ),
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -309,6 +199,8 @@ class _AppFooterState extends State<AppFooter> {
 }
 
 class _FooterNav extends StatelessWidget {
+  const _FooterNav();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -324,15 +216,19 @@ class _FooterNav extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         for (final item in AppNav.primary) ...[
-          HoverOpacity(
-            onTap: () => context.go(item.path),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Text(
-                item.label,
-                style: AppTypography.bodyStyle.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: 16,
+          Semantics(
+            button: true,
+            label: item.label,
+            child: HoverOpacity(
+              onTap: () => context.go(item.path),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Text(
+                  item.label,
+                  style: AppTypography.bodyStyle.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
@@ -344,6 +240,8 @@ class _FooterNav extends StatelessWidget {
 }
 
 class _FooterContact extends StatelessWidget {
+  const _FooterContact();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -358,13 +256,17 @@ class _FooterContact extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        HoverOpacity(
-          onTap: () => context.go(AppRoutes.contact),
-          child: Text(
-            'hello@stepzero.studio',
-            style: AppTypography.bodyStyle.copyWith(
-              color: AppColors.textPrimary,
-              fontSize: 16,
+        Semantics(
+          link: true,
+          label: 'Email hello@stepzero.studio',
+          child: HoverOpacity(
+            onTap: () => context.go(AppRoutes.contact),
+            child: Text(
+              'hello@stepzero.studio',
+              style: AppTypography.bodyStyle.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: 16,
+              ),
             ),
           ),
         ),
@@ -403,28 +305,25 @@ class _FooterNewsletter extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
-              child: TextField(
+              child: AppTextField(
                 controller: controller,
-                style: AppTypography.smallStyle.copyWith(
-                  color: AppColors.textPrimary,
-                ),
-                decoration: const InputDecoration(
-                  hintText: 'Email address',
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.md,
-                  ),
-                ),
+                label: 'Email',
+                hint: 'Email address',
+                keyboardType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            AppButton(
-              label: 'Join',
-              size: AppButtonSize.sm,
-              onPressed: () {},
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2),
+              child: AppButton(
+                label: 'Join',
+                size: AppButtonSize.sm,
+                onPressed: () {},
+              ),
             ),
           ],
         ),
@@ -443,13 +342,17 @@ class _SocialLinks extends StatelessWidget {
       spacing: AppSpacing.lg,
       children: [
         for (final link in links)
-          HoverOpacity(
-            onTap: () {},
-            child: Text(
-              link,
-              style: AppTypography.captionStyle.copyWith(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
+          Semantics(
+            link: true,
+            label: link,
+            child: HoverOpacity(
+              onTap: () {},
+              child: Text(
+                link,
+                style: AppTypography.captionStyle.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),

@@ -4,17 +4,17 @@ import '../widgets/faq_section.dart';
 import '../widgets/featured_work_section.dart';
 import '../widgets/final_cta_section.dart';
 import '../widgets/hero_section.dart';
+import '../widgets/how_we_transform_section.dart';
 import '../widgets/industries_section.dart';
 import '../widgets/insights_section.dart';
 import '../widgets/process_section.dart';
 import '../widgets/transformation_section.dart';
-import '../widgets/what_we_build_section.dart';
 import '../widgets/why_stepzero_section.dart';
 
-/// StepZero homepage — hero + remaining product surfaces.
+/// Complete StepZero homepage — composed exclusively from design-system
+/// primitives and feature section modules.
 ///
-/// Each section is an independent premium module sharing the design system.
-/// Footer lives in [PageShell].
+/// Footer lives in [PageShell] (sticky glass nav + smooth scroll).
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
       children: [
         HeroSection(),
         TransformationSection(),
-        WhatWeBuildSection(),
+        HowWeTransformSection(),
         FeaturedWorkSection(),
         IndustriesSection(),
         WhyStepZeroSection(),

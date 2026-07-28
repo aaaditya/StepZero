@@ -10,8 +10,10 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/responsive.dart';
+import '../../../../core/widgets/animated_counter.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_container.dart';
+import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
 
 class _CaseStudy {
@@ -61,7 +63,9 @@ class FeaturedWorkSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SectionContainer(
+    return SectionLandmark(
+      label: 'Featured transformations',
+      child: SectionContainer(
       maxWidth: 1440,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,6 +100,7 @@ class FeaturedWorkSection extends StatelessWidget {
           ],
         ],
       ),
+    ),
     );
   }
 }
@@ -271,30 +276,34 @@ class _MetricChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: AppRadius.mdAll,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: AppTypography.headingSStyle.copyWith(
-              fontSize: 22,
-              color: AppColors.textPrimary,
+    return Semantics(
+      label: '$label $value',
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: const BoxDecoration(
+          color: AppColors.surfaceMuted,
+          borderRadius: AppRadius.mdAll,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AnimatedCounter.fromMetricString(
+              value,
+              style: AppTypography.headingSStyle.copyWith(
+                fontSize: 22,
+                color: AppColors.textPrimary,
+              ),
+              semanticLabel: value,
             ),
-          ),
-          Text(
-            label,
-            style: AppTypography.captionStyle,
-          ),
-        ],
+            Text(
+              label,
+              style: AppTypography.captionStyle,
+            ),
+          ],
+        ),
       ),
     );
   }

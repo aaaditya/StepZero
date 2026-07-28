@@ -11,6 +11,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/app_container.dart';
+import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
 
 class _Insight {
@@ -68,7 +69,9 @@ class InsightsSection extends StatelessWidget {
     final latest = _insights.where((e) => !e.featured).toList();
     final isDesktop = Responsive.isDesktop(context);
 
-    return SectionContainer(
+    return SectionLandmark(
+      label: 'Insights',
+      child: SectionContainer(
       maxWidth: 1200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,6 +121,7 @@ class InsightsSection extends StatelessWidget {
             ],
           ],
         ],
+      ),
       ),
     );
   }

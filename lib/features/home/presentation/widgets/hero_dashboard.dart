@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/animated_counter.dart';
 import '../../../../core/widgets/floating_glass_card.dart';
 
 /// Floating glassmorphism "business operating system" composition.
@@ -354,13 +355,14 @@ class _MetricCard extends StatelessWidget {
       children: [
         _CardLabel(label),
         const SizedBox(height: AppSpacing.xs),
-        Text(
+        AnimatedCounter.fromMetricString(
           value,
           style: AppTypography.headingSStyle.copyWith(
             fontSize: 26,
             color: positive ? AppColors.success : AppColors.textPrimary,
             letterSpacing: -0.6,
           ),
+          semanticLabel: '$label $value',
         ),
         const SizedBox(height: 2),
         Text(

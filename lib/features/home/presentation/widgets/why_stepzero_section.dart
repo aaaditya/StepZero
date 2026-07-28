@@ -8,6 +8,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/widgets/app_container.dart';
+import '../../../../core/widgets/reveal.dart';
 import '../../../../core/widgets/section_header.dart';
 
 class _Comparison {
@@ -55,7 +56,9 @@ class WhyStepZeroSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
 
-    return SectionContainer(
+    return SectionLandmark(
+      label: 'Why StepZero',
+      child: SectionContainer(
       maxWidth: 1100,
       child: Column(
         children: [
@@ -88,6 +91,7 @@ class WhyStepZeroSection extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

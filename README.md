@@ -33,6 +33,8 @@ The homepage hero is implemented. Design rationale: [docs/HERO_DESIGN_DECISIONS.
 
 All post-hero sections are implemented. Spec: [docs/HOMEPAGE_SECTIONS.md](docs/HOMEPAGE_SECTIONS.md).
 
+Production notes: [docs/HOMEPAGE_IMPLEMENTATION.md](docs/HOMEPAGE_IMPLEMENTATION.md).
+
 ## Stack
 
 - Flutter (stable) · Material 3

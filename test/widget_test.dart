@@ -9,6 +9,7 @@ import 'package:stepzero/core/theme/app_colors.dart';
 import 'package:stepzero/core/theme/app_spacing.dart';
 import 'package:stepzero/core/theme/app_typography.dart';
 import 'package:stepzero/features/home/presentation/widgets/final_cta_section.dart';
+import 'package:stepzero/features/home/presentation/widgets/how_we_transform_section.dart';
 import 'package:stepzero/features/home/presentation/widgets/transformation_section.dart';
 
 void main() {
@@ -37,6 +38,7 @@ void main() {
 
     // Sections are composed in the tree even if offstage in the viewport.
     expect(find.byType(TransformationSection), findsOneWidget);
+    expect(find.byType(HowWeTransformSection), findsOneWidget);
     expect(find.byType(FinalCtaSection), findsOneWidget);
   });
 
