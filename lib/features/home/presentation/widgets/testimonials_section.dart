@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/responsive.dart';
@@ -14,7 +13,7 @@ import '../../../../core/widgets/section_header.dart';
 import '../../../content/domain/models.dart';
 import '../../../content/presentation/providers/content_providers.dart';
 
-/// Homepage testimonials teaser — sourced from Testimonials catalog.
+/// Editorial testimonials — typography leads, not Material cards.
 class TestimonialsSection extends ConsumerWidget {
   const TestimonialsSection({super.key});
 
@@ -31,9 +30,10 @@ class TestimonialsSection extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SectionHeader(
-              eyebrow: 'Testimonials',
-              title: 'Operators, in their own words.',
-              subtitle: 'Proof as voice — not star ratings.',
+              eyebrow: 'Operators',
+              title: 'In their own words.',
+              subtitle:
+                  'Owners who rebuilt identity, presence, and systems with us.',
               action: isDesktop
                   ? TextButton(
                       onPressed: () => context.go(AppRoutes.testimonials),
@@ -42,29 +42,17 @@ class TestimonialsSection extends ConsumerWidget {
                   : null,
             ),
             const SizedBox(height: AppSpacing.xxxl),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final columns = isDesktop ? 2 : 1;
-                const gap = AppSpacing.lg;
-                final width = columns == 1
-                    ? constraints.maxWidth
-                    : (constraints.maxWidth - gap) / 2;
-                return Wrap(
-                  spacing: gap,
-                  runSpacing: gap,
-                  children: [
-                    for (var i = 0; i < items.length; i++)
-                      SizedBox(
-                        width: width,
-                        child: Reveal(
-                          delay: Duration(milliseconds: 80 * i),
-                          child: _QuoteCard(item: items[i]),
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ),
+            for (var i = 0; i < items.length; i++) ...[
+              Reveal(
+                delay: Duration(milliseconds: 80 * i),
+                child: _QuoteBlock(item: items[i], featured: i == 0),
+              ),
+              if (i != items.length - 1)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
+                  child: Divider(color: AppColors.border, height: 1),
+                ),
+            ],
           ],
         ),
       ),
@@ -72,40 +60,76 @@ class TestimonialsSection extends ConsumerWidget {
   }
 }
 
-class _QuoteCard extends StatelessWidget {
-  const _QuoteCard({required this.item});
+class _QuoteBlock extends StatelessWidget {
+  const _QuoteBlock({required this.item, required this.featured});
 
   final Testimonial item;
+  final bool featured;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: AppRadius.xlAll,
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final quoteSize = featured
+        ? Responsive.fluidFontSize(
+            context,
+            desktop: 32,
+            tablet: 26,
+            mobile: 22,
+          )
+        : Responsive.fluidFontSize(
+            context,
+            desktop: 24,
+            tablet: 22,
+            mobile: 20,
+          );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '“',
+          style: AppTypography.displayHero.copyWith(
+            fontSize: featured ? 72 : 48,
+            height: 0.7,
+            color: AppColors.accent.withValues(alpha: 0.35),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        Text(
+          item.quote,
+          style: AppTypography.headingSStyle.copyWith(
+            fontSize: quoteSize,
+            height: 1.35,
+            letterSpacing: -0.6,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        Row(
           children: [
-            Text(
-              '“${item.quote}”',
-              style: AppTypography.bodyLargeStyle.copyWith(
-                height: 1.55,
-                fontWeight: FontWeight.w500,
-              ),
+            Container(
+              width: 28,
+              height: 1,
+              color: AppColors.accent,
             ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(item.name, style: AppTypography.bodyStrong),
-            Text(
-              '${item.role}, ${item.company}',
-              style: AppTypography.captionStyle,
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.name, style: AppTypography.bodyStrong),
+                  Text(
+                    '${item.role}, ${item.company}',
+                    style: AppTypography.captionStyle.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }

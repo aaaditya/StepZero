@@ -365,7 +365,7 @@ class _ReviewsCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '4.9 · Trust signal',
+          '4.9 · 47 reviews',
           style: AppTypography.captionStyle.copyWith(
             color: AppColors.textSecondary,
             fontWeight: FontWeight.w500,

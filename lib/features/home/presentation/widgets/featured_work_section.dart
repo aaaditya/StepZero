@@ -33,7 +33,7 @@ class FeaturedWorkSection extends ConsumerWidget {
     return SectionLandmark(
       label: 'Featured transformations',
       child: SectionContainer(
-        maxWidth: AppLayout.heroMaxWidth,
+        maxWidth: AppLayout.pageMaxWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -205,6 +205,7 @@ class _CaseCopy extends StatelessWidget {
         const SizedBox(height: AppSpacing.xl),
         AppButton(
           label: 'View case study',
+          variant: AppButtonVariant.secondary,
           size: AppButtonSize.sm,
           onPressed: () => context.go(AppRoutes.caseStudy(study.slug)),
         ),
@@ -259,9 +260,10 @@ class _MetricChip extends StatelessWidget {
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
         ),
-        decoration: const BoxDecoration(
-          color: AppColors.surfaceMuted,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: AppRadius.mdAll,
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,15 +337,94 @@ class _LaptopMock extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(10),
       child: DecoratedBox(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
           borderRadius: AppRadius.mdAll,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              accent.withValues(alpha: 0.35),
-              AppColors.surfaceMuted,
-              accent.withValues(alpha: 0.15),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 28,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: accent,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    width: 48,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: AppColors.borderStrong,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 10,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.textPrimary.withValues(alpha: 0.85),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Container(
+                            height: 6,
+                            width: 90,
+                            decoration: BoxDecoration(
+                              color: AppColors.textSecondary.withValues(alpha: 0.35),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            height: 18,
+                            width: 72,
+                            decoration: BoxDecoration(
+                              color: accent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      flex: 2,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              accent.withValues(alpha: 0.55),
+                              accent.withValues(alpha: 0.2),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -371,13 +452,46 @@ class _PhoneMock extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: DecoratedBox(
         decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(14),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              accent.withValues(alpha: 0.5),
-              AppColors.surface,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 6,
+                width: 36,
+                decoration: BoxDecoration(
+                  color: accent,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        accent.withValues(alpha: 0.45),
+                        AppColors.surfaceMuted,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 16,
+                decoration: BoxDecoration(
+                  color: AppColors.textPrimary,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
             ],
           ),
         ),

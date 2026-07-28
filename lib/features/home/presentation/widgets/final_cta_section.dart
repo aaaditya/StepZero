@@ -23,9 +23,9 @@ class FinalCtaSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final titleSize = Responsive.fluidFontSize(
       context,
-      desktop: 56,
-      tablet: 42,
-      mobile: 32,
+      desktop: 52,
+      tablet: 40,
+      mobile: 30,
     );
 
     return SectionLandmark(
@@ -45,8 +45,9 @@ class FinalCtaSection extends StatelessWidget {
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(
-                horizontal:
-                    Responsive.isMobile(context) ? AppSpacing.lg : AppSpacing.xxxl,
+                horizontal: Responsive.isMobile(context)
+                    ? AppSpacing.lg
+                    : AppSpacing.xxxl,
                 vertical: Responsive.isMobile(context)
                     ? AppSpacing.xxxl
                     : AppSpacing.section,
@@ -64,22 +65,26 @@ class FinalCtaSection extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Ready to Leave Step Zero?',
+                    'Ready to become the brand people trust?',
                     textAlign: TextAlign.center,
                     style: AppTypography.headingXlStyle.copyWith(
                       fontSize: titleSize,
                       color: AppColors.textInverse,
                       fontWeight: FontWeight.w700,
+                      height: 1.1,
+                      letterSpacing: -1.2,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 520),
+                    constraints: const BoxConstraints(maxWidth: 540),
                     child: Text(
-                      'Let’s build a business customers remember.',
+                      'Tell us where you are — brand, website, growth, or chaos. '
+                      'We’ll tell you the honest next step.',
                       textAlign: TextAlign.center,
                       style: AppTypography.bodyLargeStyle.copyWith(
-                        color: AppColors.textInverse.withValues(alpha: 0.78),
+                        color: AppColors.textInverse.withValues(alpha: 0.82),
+                        height: 1.5,
                       ),
                     ),
                   ),
@@ -89,7 +94,7 @@ class FinalCtaSection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             AppButton(
-                              label: 'Book Discovery Call',
+                              label: 'Start a project',
                               expand: true,
                               magnetic: true,
                               pulse: true,
@@ -97,7 +102,7 @@ class FinalCtaSection extends StatelessWidget {
                             ),
                             const SizedBox(height: AppSpacing.sm),
                             AppButton(
-                              label: 'See Our Work',
+                              label: 'View our work',
                               variant: AppButtonVariant.onDark,
                               expand: true,
                               onPressed: () => context.go(AppRoutes.work),
@@ -110,14 +115,14 @@ class FinalCtaSection extends StatelessWidget {
                           runSpacing: AppSpacing.sm,
                           children: [
                             AppButton(
-                              label: 'Book Discovery Call',
+                              label: 'Start a project',
                               size: AppButtonSize.lg,
                               magnetic: true,
                               pulse: true,
                               onPressed: () => context.go(AppRoutes.contact),
                             ),
                             AppButton(
-                              label: 'See Our Work',
+                              label: 'View our work',
                               variant: AppButtonVariant.onDark,
                               size: AppButtonSize.lg,
                               onPressed: () => context.go(AppRoutes.work),
@@ -126,11 +131,11 @@ class FinalCtaSection extends StatelessWidget {
                         ),
                   const SizedBox(height: AppSpacing.xl),
                   Text(
-                    'Limited projects each quarter. Serious inquiries only.',
+                    'Limited projects each quarter.',
                     textAlign: TextAlign.center,
                     style: AppTypography.captionStyle.copyWith(
-                      // ≥ 4.5:1 on dark wash — avoid washed-out grey.
                       color: AppColors.textInverse.withValues(alpha: 0.78),
+                      letterSpacing: 0.2,
                     ),
                   ),
                 ],

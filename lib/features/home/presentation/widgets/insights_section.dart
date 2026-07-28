@@ -40,9 +40,9 @@ class InsightsSection extends ConsumerWidget {
           children: [
             SectionHeader(
               eyebrow: 'Insights',
-              title: 'Thinking you can try before you buy.',
+              title: 'Clarity before commitment.',
               subtitle:
-                  'Short essays for operators who want clarity — not content factories.',
+                  'Short essays for operators who want sharper decisions.',
               action: Responsive.isDesktop(context)
                   ? TextButton(
                       onPressed: () => context.go(AppRoutes.articles),
@@ -131,39 +131,56 @@ class _FeaturedInsightCardState extends State<_FeaturedInsightCard> {
                 aspectRatio: 16 / 10,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 260),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        tone.withValues(alpha: _hovered ? 0.28 : 0.18),
-                        AppColors.surfaceMuted,
-                        tone.withValues(alpha: 0.08),
-                      ],
-                    ),
-                  ),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: AppSpacing.xxs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface.withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
+                  color: AppColors.textPrimary,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        right: -20,
+                        top: -30,
                         child: Text(
-                          'Featured',
-                          style: AppTypography.captionStyle.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.accent,
+                          '0${(article.title.hashCode.abs() % 8) + 1}',
+                          style: AppTypography.displayHero.copyWith(
+                            fontSize: 160,
+                            color: tone.withValues(alpha: 0.22),
+                            height: 1,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.xl),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'FEATURED',
+                              style: AppTypography.captionStyle.copyWith(
+                                color: AppColors.accent,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.4,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              article.title,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.headingMStyle.copyWith(
+                                color: AppColors.textInverse,
+                                fontSize: Responsive.fluidFontSize(
+                                  context,
+                                  desktop: 32,
+                                  tablet: 26,
+                                  mobile: 22,
+                                ),
+                                height: 1.15,
+                                letterSpacing: -0.8,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -177,11 +194,6 @@ class _FeaturedInsightCardState extends State<_FeaturedInsightCard> {
                       style: AppTypography.captionStyle.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      article.title,
-                      style: AppTypography.headingSStyle.copyWith(fontSize: 26),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
@@ -225,7 +237,6 @@ class _InsightRowState extends State<_InsightRow> {
   @override
   Widget build(BuildContext context) {
     final article = widget.article;
-    final tone = Color(article.tone);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
@@ -243,20 +254,6 @@ class _InsightRowState extends State<_InsightRow> {
           ),
           child: Row(
             children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  borderRadius: AppRadius.mdAll,
-                  gradient: LinearGradient(
-                    colors: [
-                      tone.withValues(alpha: 0.25),
-                      AppColors.surfaceMuted,
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,10 +265,15 @@ class _InsightRowState extends State<_InsightRow> {
                     const SizedBox(height: 4),
                     Text(
                       article.title,
-                      style: AppTypography.bodyStrong.copyWith(fontSize: 16),
+                      style: AppTypography.bodyStrong.copyWith(fontSize: 17),
                     ),
                   ],
                 ),
+              ),
+              Icon(
+                Icons.arrow_forward_rounded,
+                size: 18,
+                color: _hovered ? AppColors.accent : AppColors.textTertiary,
               ),
             ],
           ),

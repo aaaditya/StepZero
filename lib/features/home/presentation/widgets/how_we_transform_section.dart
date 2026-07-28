@@ -37,10 +37,11 @@ class HowWeTransformSection extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SectionHeader(
-              eyebrow: 'How we transform',
-              title: 'How We Transform Businesses.',
+              eyebrow: 'Our systems',
+              title: 'Four systems. One operating stack.',
               subtitle:
-                  'Four systems. One outcome: a local business that feels premium and runs with clarity.',
+                  'Brand, presence, automation, and growth — installed in '
+                  'order so the business feels premium and runs with clarity.',
             ),
             const SizedBox(height: AppSpacing.xxxl),
             LayoutBuilder(
@@ -155,7 +156,7 @@ class _TransformCard extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'Explore →',
+              'Learn more →',
               style: AppTypography.buttonLabel.copyWith(color: AppColors.accent),
             ),
           ],

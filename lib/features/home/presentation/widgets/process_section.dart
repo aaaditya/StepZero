@@ -16,11 +16,13 @@ class _ProcessStep {
     required this.title,
     required this.description,
     required this.duration,
+    required this.involvement,
   });
 
   final String title;
   final String description;
   final String duration;
+  final String involvement;
 }
 
 /// Horizontal premium process — confidence through clarity.
@@ -36,38 +38,49 @@ class _ProcessSectionState extends State<ProcessSection>
   static const _steps = <_ProcessStep>[
     _ProcessStep(
       title: 'Discover',
-      description: 'Diagnose the business, audience, and constraints.',
-      duration: '1 week',
+      description:
+          'Diagnose the business, audience truth, and constraints before '
+          'any pixels. We map what is broken and what is already working.',
+      duration: '1–2 weeks',
+      involvement: '2 founder workshops · access to analytics & brand assets',
     ),
     _ProcessStep(
       title: 'Strategy',
-      description: 'Lock positioning, success metrics, and sequence.',
+      description:
+          'Lock positioning, success metrics, and the transformation sequence. '
+          'You leave with a written operating brief — not a moodboard.',
       duration: '1–2 weeks',
+      involvement: '1 strategy review · decision owner on your side',
     ),
     _ProcessStep(
       title: 'Design',
-      description: 'Craft identity and experience systems.',
+      description:
+          'Craft identity and experience systems that feel premium in your '
+          'category — not generic agency templates.',
       duration: '2–3 weeks',
+      involvement: '2 design reviews · feedback within 3 business days',
     ),
     _ProcessStep(
       title: 'Build',
-      description: 'Ship site, automation, and operating assets.',
+      description:
+          'Ship site, automation, and operating assets as one system. '
+          'Training included so your team can run it without us.',
       duration: '2–4 weeks',
+      involvement: 'Content supply · weekly async check-ins',
     ),
     _ProcessStep(
-      title: 'Launch',
-      description: 'Go live with QA, training, and handoff clarity.',
-      duration: '1 week',
-    ),
-    _ProcessStep(
-      title: 'Grow',
-      description: 'Compound with content, SEO, and iteration.',
+      title: 'Compound',
+      description:
+          'Go live, then keep compounding — content, SEO, automation, and '
+          'iteration so the system gets sharper after launch.',
       duration: 'Ongoing',
+      involvement: 'Monthly growth cadence · optional retainer',
     ),
   ];
 
   late final AnimationController _lineController;
   int _active = 0;
+  bool _lineStarted = false;
 
   @override
   void initState() {
@@ -75,13 +88,19 @@ class _ProcessSectionState extends State<ProcessSection>
     _lineController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1100),
-    )..forward();
+    );
   }
 
   @override
   void dispose() {
     _lineController.dispose();
     super.dispose();
+  }
+
+  void _maybeStartLine() {
+    if (_lineStarted) return;
+    _lineStarted = true;
+    _lineController.forward();
   }
 
   @override
@@ -91,43 +110,73 @@ class _ProcessSectionState extends State<ProcessSection>
     return SectionLandmark(
       label: 'Process',
       child: SectionContainer(
-      maxWidth: 1200,
-      backgroundColor: AppColors.surfaceMuted,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionHeader(
-            eyebrow: 'Process',
-            title: 'A calm path from unclear to unmistakable.',
-            subtitle:
-                'Named stages. Clear involvement. No mysterious black boxes.',
-          ),
-          const SizedBox(height: AppSpacing.xxxl),
-          if (isDesktop) _DesktopProcess(
-            steps: _steps,
-            active: _active,
-            line: _lineController,
-            onSelect: (i) => setState(() => _active = i),
-          ) else
-            _MobileProcess(
-              steps: _steps,
-              active: _active,
-              onSelect: (i) => setState(() => _active = i),
+        maxWidth: 1200,
+        backgroundColor: AppColors.surfaceMuted,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SectionHeader(
+              eyebrow: 'Process',
+              title: 'A calm path from unclear to unmistakable.',
+              subtitle:
+                  'Named stages. Clear involvement. No mysterious black boxes.',
             ),
-          const SizedBox(height: AppSpacing.xxl),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 280),
-            child: _ProcessDetail(
-              key: ValueKey(_active),
-              step: _steps[_active],
-              index: _active,
+            const SizedBox(height: AppSpacing.xxxl),
+            VisibilityDetectorHook(
+              onVisible: _maybeStartLine,
+              child: isDesktop
+                  ? _DesktopProcess(
+                      steps: _steps,
+                      active: _active,
+                      line: _lineController,
+                      onSelect: (i) => setState(() => _active = i),
+                    )
+                  : _MobileProcess(
+                      steps: _steps,
+                      active: _active,
+                      onSelect: (i) => setState(() => _active = i),
+                    ),
             ),
-          ),
-        ],
-      ),
+            const SizedBox(height: AppSpacing.xxl),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 280),
+              child: _ProcessDetail(
+                key: ValueKey(_active),
+                step: _steps[_active],
+                index: _active,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+}
+
+/// Fires [onVisible] once when laid out (LazySection already defers build).
+class VisibilityDetectorHook extends StatefulWidget {
+  const VisibilityDetectorHook({
+    required this.child,
+    required this.onVisible,
+    super.key,
+  });
+
+  final Widget child;
+  final VoidCallback onVisible;
+
+  @override
+  State<VisibilityDetectorHook> createState() => _VisibilityDetectorHookState();
+}
+
+class _VisibilityDetectorHookState extends State<VisibilityDetectorHook> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => widget.onVisible());
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class _DesktopProcess extends StatelessWidget {
@@ -374,6 +423,22 @@ class _ProcessDetail extends StatelessWidget {
           Text(
             step.description,
             style: AppTypography.bodyLargeStyle,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            'What we need from you',
+            style: AppTypography.captionStyle.copyWith(
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.8,
+              color: AppColors.textTertiary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            step.involvement,
+            style: AppTypography.bodyStyle.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
         ],
       ),

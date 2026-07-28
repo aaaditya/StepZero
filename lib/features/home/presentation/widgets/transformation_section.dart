@@ -16,6 +16,7 @@ class _JourneyStep {
     required this.indexLabel,
     required this.title,
     required this.description,
+    required this.outcomes,
     required this.icon,
     required this.accent,
   });
@@ -23,6 +24,7 @@ class _JourneyStep {
   final String indexLabel;
   final String title;
   final String description;
+  final List<String> outcomes;
   final IconData icon;
   final Color accent;
 }
@@ -38,58 +40,106 @@ class TransformationSection extends StatefulWidget {
 class _TransformationSectionState extends State<TransformationSection> {
   static const _steps = <_JourneyStep>[
     _JourneyStep(
-      indexLabel: 'Step 0',
+      indexLabel: '00',
       title: 'No Identity',
-      description: 'Unclear offer, inconsistent presence, trust that leaks.',
+      description:
+          'Unclear offer, inconsistent presence, trust that leaks at every touchpoint.',
+      outcomes: [
+        'Customers can’t explain why to choose you',
+        'Every new channel starts from zero',
+        'Growth feels random, not designed',
+      ],
       icon: Icons.radio_button_unchecked,
       accent: AppColors.textTertiary,
     ),
     _JourneyStep(
       indexLabel: '01',
       title: 'Brand Strategy',
-      description: 'Positioning, audience truth, and the reason to choose you.',
+      description:
+          'Positioning, audience truth, and the reason to choose you — locked before design.',
+      outcomes: [
+        'One-sentence positioning',
+        'Audience & category map',
+        'Success metrics defined',
+      ],
       icon: Icons.center_focus_strong_outlined,
       accent: AppColors.accent,
     ),
     _JourneyStep(
       indexLabel: '02',
       title: 'Visual Identity',
-      description: 'A system of marks, type, and color that feels premium.',
+      description:
+          'A system of marks, type, and color that feels premium in your category.',
+      outcomes: [
+        'Logo & type system',
+        'Color & photography rules',
+        'Application kit',
+      ],
       icon: Icons.palette_outlined,
       accent: AppColors.accent,
     ),
     _JourneyStep(
       indexLabel: '03',
       title: 'Website',
-      description: 'A digital storefront that converts trust into action.',
+      description:
+          'A digital storefront that converts trust into bookings, orders, and inquiries.',
+      outcomes: [
+        'Conversion architecture',
+        'Mobile-first craft',
+        'Measurable CTAs',
+      ],
       icon: Icons.language,
       accent: AppColors.accent,
     ),
     _JourneyStep(
       indexLabel: '04',
       title: 'Google Presence',
-      description: 'Maps, reviews, and local discovery that compound daily.',
+      description:
+          'Maps, reviews, and local discovery that compound daily without paid spend.',
+      outcomes: [
+        'Profile & review system',
+        'Local SEO foundation',
+        'Reputation cadence',
+      ],
       icon: Icons.travel_explore,
       accent: AppColors.accent,
     ),
     _JourneyStep(
       indexLabel: '05',
       title: 'AI Automation',
-      description: 'Chat, WhatsApp, and booking that reply while you work.',
+      description:
+          'Chat, WhatsApp, and booking that reply while you work the floor.',
+      outcomes: [
+        'Always-on replies',
+        'Booking & FAQ automation',
+        'Human handoff when needed',
+      ],
       icon: Icons.auto_awesome,
       accent: AppColors.accent,
     ),
     _JourneyStep(
       indexLabel: '06',
       title: 'Growth',
-      description: 'Acquisition that fits the brand — not random ads.',
+      description:
+          'Acquisition that fits the brand — not random ads bolted on after the fact.',
+      outcomes: [
+        'Channel strategy',
+        'Content that compounds',
+        'Paid only where it pays',
+      ],
       icon: Icons.trending_up,
       accent: AppColors.success,
     ),
     _JourneyStep(
       indexLabel: '07',
       title: 'Scale',
-      description: 'Repeatable excellence across offers, teams, or locations.',
+      description:
+          'Repeatable excellence across offers, teams, or locations.',
+      outcomes: [
+        'Playbooks & training',
+        'Multi-location systems',
+        'Brand that travels',
+      ],
       icon: Icons.hub_outlined,
       accent: AppColors.success,
     ),
@@ -109,8 +159,8 @@ class _TransformationSectionState extends State<TransformationSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SectionHeader(
-            eyebrow: 'Transformation',
-            title: 'The Journey From Local Business to Premium Brand.',
+            eyebrow: 'The Method',
+            title: 'Local business → premium brand.',
             subtitle:
                 'Businesses don’t stall from lack of tools. They stall from '
                 'starting in the wrong order. StepZero installs the sequence.',
@@ -416,90 +466,47 @@ class _ActivePanel extends StatelessWidget {
               style: AppTypography.bodyLargeStyle,
             ),
             const SizedBox(height: AppSpacing.xxl),
-            _JourneyIllustration(accent: step.accent, icon: step.icon),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _JourneyIllustration extends StatelessWidget {
-  const _JourneyIllustration({required this.accent, required this.icon});
-
-  final Color accent;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 10,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: AppRadius.xlAll,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              accent.withValues(alpha: 0.16),
-              AppColors.surfaceMuted,
-              accent.withValues(alpha: 0.06),
+            Text(
+              'What changes',
+              style: AppTypography.captionStyle.copyWith(
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.0,
+                color: AppColors.textTertiary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            for (final outcome in step.outcomes) ...[
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: step.accent,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Text(
+                        outcome,
+                        style: AppTypography.bodyStyle.copyWith(
+                          fontSize: 16,
+                          height: 1.45,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
-          ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              right: 24,
-              bottom: 24,
-              child: Icon(
-                icon,
-                size: 88,
-                color: accent.withValues(alpha: 0.22),
-              ),
-            ),
-            Positioned(
-              left: 28,
-              top: 28,
-              child: Container(
-                width: 120,
-                height: 10,
-                decoration: BoxDecoration(
-                  color: AppColors.textPrimary.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 28,
-              top: 52,
-              child: Container(
-                width: 180,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: AppColors.textSecondary.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 28,
-              bottom: 36,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: accent,
-                  borderRadius: AppRadius.smAll,
-                ),
-                child: Text(
-                  'Next step',
-                  style: AppTypography.captionStyle.copyWith(
-                    color: AppColors.textOnAccent,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),

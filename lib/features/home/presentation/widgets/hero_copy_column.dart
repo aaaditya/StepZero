@@ -13,7 +13,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/pill_badge.dart';
 import '../../../../core/widgets/trust_indicator.dart';
 
-/// Left-column hero narrative — who we are, who it's for, what to do.
+/// Left-column hero narrative — belief, outcome, action.
 class HeroCopyColumn extends StatelessWidget {
   const HeroCopyColumn({
     this.expandButtons = false,
@@ -24,9 +24,9 @@ class HeroCopyColumn extends StatelessWidget {
   final bool expandButtons;
 
   static const List<String> trustLabels = [
-    'Strategy First',
-    'AI Powered',
-    'Built for Growth',
+    'Strategy before website',
+    'Limited projects / quarter',
+    'Compound, don’t hand off',
   ];
 
   @override
@@ -51,8 +51,11 @@ class HeroCopyColumn extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const PillBadge(
-          label: 'Helping Local Businesses Grow',
-          leading: Icon(Icons.auto_awesome, size: 14),
+          label: 'Brand before traffic',
+          backgroundColor: AppColors.accentSubtle,
+          foregroundColor: AppColors.accent,
+          borderColor: AppColors.accent,
+          leading: Icon(Icons.north_east_rounded, size: 14, color: AppColors.accent),
         )
             .animate()
             .fadeIn(duration: 500.ms, curve: AppCurves.enter)
@@ -60,22 +63,20 @@ class HeroCopyColumn extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
         _StaggeredHeadline(
           lines: const [
-            'Every Great Business',
-            'Starts at',
-            'StepZero.',
+            'We build businesses',
+            'people trust.',
           ],
           style: headlineStyle,
-          accentLineIndex: 2,
+          accentLineIndex: 1,
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'We help local businesses transform through branding, '
-          'premium websites, AI automation and growth systems '
-          'that customers trust.',
+          'We turn local operators into premium brands — '
+          'and install the systems that make that growth compound.',
           style: AppTypography.bodyLargeStyle.copyWith(
             fontSize: Responsive.fluidFontSize(
               context,
-              desktop: 18,
+              desktop: 19,
               tablet: 17,
               mobile: 16,
             ),
@@ -154,7 +155,7 @@ class _HeroCtaRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primary = AppButton(
-      label: 'Book a Discovery Call',
+      label: 'Start a project',
       size: AppButtonSize.lg,
       expand: expand,
       magnetic: true,
@@ -163,7 +164,7 @@ class _HeroCtaRow extends StatelessWidget {
     );
 
     final secondary = AppButton(
-      label: 'View Our Work',
+      label: 'View our work',
       variant: AppButtonVariant.secondary,
       size: AppButtonSize.lg,
       expand: expand,

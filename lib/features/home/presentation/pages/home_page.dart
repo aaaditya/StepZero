@@ -11,11 +11,13 @@ import '../widgets/insights_section.dart';
 import '../widgets/process_section.dart';
 import '../widgets/testimonials_section.dart';
 import '../widgets/transformation_section.dart';
+import '../widgets/trust_conviction_strip.dart';
 import '../widgets/why_stepzero_section.dart';
 
 /// Complete StepZero homepage — above-the-fold eager, below-fold lazy.
 ///
-/// Footer lives in [PageShell] (sticky glass nav + smooth scroll).
+/// Narrative arc: belief → convictions → method → systems → proof →
+/// domain fit → differentiation → process → objections → authority → invite.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -23,8 +25,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Critical path — paint immediately for LCP / FCP.
         const HeroSection(),
+        LazySection(
+          eager: true,
+          builder: (_) => const TrustConvictionStrip(),
+        ),
         LazySection(
           eager: true,
           builder: (_) => const TransformationSection(),
@@ -36,10 +41,6 @@ class HomePage extends StatelessWidget {
         LazySection(
           placeholderHeight: 900,
           builder: (_) => const FeaturedWorkSection(),
-        ),
-        LazySection(
-          placeholderHeight: 560,
-          builder: (_) => const TestimonialsSection(),
         ),
         LazySection(
           placeholderHeight: 640,
@@ -54,12 +55,16 @@ class HomePage extends StatelessWidget {
           builder: (_) => const ProcessSection(),
         ),
         LazySection(
-          placeholderHeight: 720,
-          builder: (_) => const InsightsSection(),
+          placeholderHeight: 560,
+          builder: (_) => const TestimonialsSection(),
         ),
         LazySection(
           placeholderHeight: 640,
           builder: (_) => const FaqSection(),
+        ),
+        LazySection(
+          placeholderHeight: 720,
+          builder: (_) => const InsightsSection(),
         ),
         LazySection(
           placeholderHeight: 480,

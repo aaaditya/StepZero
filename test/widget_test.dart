@@ -29,9 +29,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1300));
 
     expect(find.text(Brand.name), findsWidgets);
-    expect(find.textContaining('Every Great Business'), findsOneWidget);
-    expect(find.text('Book a Discovery Call'), findsOneWidget);
-    expect(find.text('View Our Work'), findsOneWidget);
+    expect(find.textContaining('We build businesses'), findsOneWidget);
+    expect(find.text('Start a project'), findsWidgets);
+    expect(find.text('View our work'), findsOneWidget);
 
     // Above-the-fold / eager sections are in the tree immediately.
     expect(find.byType(HeroSection), findsOneWidget);

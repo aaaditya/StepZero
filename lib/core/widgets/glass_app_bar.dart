@@ -124,7 +124,7 @@ class GlassAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             path: item.path,
                             selected: _isSelected(location, item.path),
                           ),
-                          const SizedBox(width: AppSpacing.md),
+                          const SizedBox(width: AppSpacing.xl),
                         ],
                         AppButton(
                           label: settings.primaryCtaLabel,
