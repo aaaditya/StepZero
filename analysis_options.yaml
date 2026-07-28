@@ -1,0 +1,34 @@
+# StepZero analyzer configuration.
+# Strict enough for production, without blocking exploratory UI work.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+  errors:
+    missing_required_param: error
+    missing_return: error
+    invalid_assignment: error
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    avoid_print: true
+    avoid_unnecessary_containers: true
+    sized_box_for_whitespace: true
+    use_key_in_widget_constructors: true
+    always_declare_return_types: true
+    annotate_overrides: true
+    avoid_empty_else: true
+    avoid_relative_lib_imports: true
+    directives_ordering: true
+    sort_child_properties_last: true
+    use_super_parameters: true
+    unnecessary_late: true
+    unnecessary_await_in_return: true

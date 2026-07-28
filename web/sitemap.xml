@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://stepzero.studio/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://stepzero.studio/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://stepzero.studio/services/brand</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/services/digital-presence</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/services/automation</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/services/growth</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/work</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://stepzero.studio/work/northside-clinic</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://stepzero.studio/work/oven-and-oak</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://stepzero.studio/articles</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://stepzero.studio/articles/brand-before-traffic</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/articles/qr-menu-brand-surface</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/articles/automation-still-human</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/testimonials</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/team</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/faq</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/pricing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://stepzero.studio/industries</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://stepzero.studio/industries/restaurants</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/industries/cafes</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/industries/salons</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/industries/clinics</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/industries/gyms</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/industries/retail</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/industries/hotels</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/industries/real-estate</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://stepzero.studio/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://stepzero.studio/contact</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>
