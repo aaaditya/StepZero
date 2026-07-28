@@ -19,6 +19,9 @@ enum AppButtonVariant {
 
   /// Near-black fill — high-contrast editorial CTA.
   dark,
+
+  /// White outline for dark surfaces (final CTA, etc.).
+  onDark,
 }
 
 enum AppButtonSize {
@@ -194,6 +197,13 @@ class _AppButtonState extends State<AppButton> {
           background:
               hovered ? const Color(0xFF1A1A1A) : AppColors.textPrimary,
           foreground: AppColors.textInverse,
+        ),
+      AppButtonVariant.onDark => _ButtonColors(
+          background: hovered
+              ? AppColors.surface.withValues(alpha: 0.12)
+              : Colors.transparent,
+          foreground: AppColors.textInverse,
+          borderColor: AppColors.surface.withValues(alpha: 0.45),
         ),
     };
   }

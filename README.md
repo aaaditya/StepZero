@@ -29,6 +29,10 @@ See [docs/HOMEPAGE_UX_BLUEPRINT.md](docs/HOMEPAGE_UX_BLUEPRINT.md) for the full 
 
 The homepage hero is implemented. Design rationale: [docs/HERO_DESIGN_DECISIONS.md](docs/HERO_DESIGN_DECISIONS.md).
 
+## Remaining homepage sections
+
+All post-hero sections are implemented. Spec: [docs/HOMEPAGE_SECTIONS.md](docs/HOMEPAGE_SECTIONS.md).
+
 ## Stack
 
 - Flutter (stable) · Material 3

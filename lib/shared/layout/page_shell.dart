@@ -206,42 +206,254 @@ class _NavLink extends StatelessWidget {
   }
 }
 
-/// Site footer foundation — expand with columns when content is ready.
-class AppFooter extends StatelessWidget {
+/// Site footer — large brand mark, utility nav, contact, newsletter.
+class AppFooter extends StatefulWidget {
   const AppFooter({super.key});
 
   @override
+  State<AppFooter> createState() => _AppFooterState();
+}
+
+class _AppFooterState extends State<AppFooter> {
+  final _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
+
     return DecoratedBox(
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.border)),
         color: AppColors.surface,
+        border: Border(top: BorderSide(color: AppColors.border)),
       ),
       child: MaxWidthBox(
+        maxWidth: 1200,
         padding: EdgeInsets.symmetric(
           horizontal: Responsive.pageGutter(context),
-          vertical: AppSpacing.xxl,
+          vertical: AppSpacing.section,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               Brand.name,
-              style: AppTypography.headingSStyle.copyWith(fontSize: 20),
+              style: AppTypography.displayHero.copyWith(
+                fontSize: Responsive.fluidFontSize(
+                  context,
+                  desktop: 72,
+                  tablet: 56,
+                  mobile: 40,
+                ),
+                fontWeight: FontWeight.w700,
+                letterSpacing: -2,
+              ),
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.md),
             Text(
               Brand.tagline,
-              style: AppTypography.smallStyle,
+              style: AppTypography.bodyLargeStyle,
             ),
+            const SizedBox(height: AppSpacing.xxxl),
+            if (isDesktop)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: _FooterNav()),
+                  Expanded(child: _FooterContact()),
+                  Expanded(child: _FooterNewsletter(controller: _emailController)),
+                ],
+              )
+            else ...[
+              _FooterNav(),
+              const SizedBox(height: AppSpacing.xxl),
+              _FooterContact(),
+              const SizedBox(height: AppSpacing.xxl),
+              _FooterNewsletter(controller: _emailController),
+            ],
+            const SizedBox(height: AppSpacing.xxxl),
+            const Divider(color: AppColors.border),
             const SizedBox(height: AppSpacing.xl),
-            Text(
-              '© ${DateTime.now().year} ${Brand.legalName}. All rights reserved.',
-              style: AppTypography.captionStyle,
-            ),
+            Responsive.isMobile(context)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '© ${DateTime.now().year} ${Brand.legalName}',
+                        style: AppTypography.captionStyle,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      const _SocialLinks(),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Text(
+                        '© ${DateTime.now().year} ${Brand.legalName}. All rights reserved.',
+                        style: AppTypography.captionStyle,
+                      ),
+                      const Spacer(),
+                      const _SocialLinks(),
+                    ],
+                  ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FooterNav extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Navigate',
+          style: AppTypography.captionStyle.copyWith(
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.1,
+            color: AppColors.textTertiary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        for (final item in AppNav.primary) ...[
+          HoverOpacity(
+            onTap: () => context.go(item.path),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Text(
+                item.label,
+                style: AppTypography.bodyStyle.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _FooterContact extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Contact',
+          style: AppTypography.captionStyle.copyWith(
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.1,
+            color: AppColors.textTertiary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        HoverOpacity(
+          onTap: () => context.go(AppRoutes.contact),
+          child: Text(
+            'hello@stepzero.studio',
+            style: AppTypography.bodyStyle.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          'Book a discovery call',
+          style: AppTypography.smallStyle,
+        ),
+      ],
+    );
+  }
+}
+
+class _FooterNewsletter extends StatelessWidget {
+  const _FooterNewsletter({required this.controller});
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Newsletter',
+          style: AppTypography.captionStyle.copyWith(
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.1,
+            color: AppColors.textTertiary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          'Operator notes. No spam.',
+          style: AppTypography.smallStyle,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: controller,
+                style: AppTypography.smallStyle.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+                decoration: const InputDecoration(
+                  hintText: 'Email address',
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.md,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            AppButton(
+              label: 'Join',
+              size: AppButtonSize.sm,
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SocialLinks extends StatelessWidget {
+  const _SocialLinks();
+
+  @override
+  Widget build(BuildContext context) {
+    const links = ['Instagram', 'LinkedIn', 'X'];
+    return Wrap(
+      spacing: AppSpacing.lg,
+      children: [
+        for (final link in links)
+          HoverOpacity(
+            onTap: () {},
+            child: Text(
+              link,
+              style: AppTypography.captionStyle.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -43,7 +43,9 @@ class HeroSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final topInset = MediaQuery.paddingOf(context).top + 72;
-    final isMobile = Responsive.isMobile(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final stacked = Responsive.isMobile(context) ||
+        (Responsive.isTablet(context) && width < Breakpoints.tablet + 80);
 
     final content = Padding(
       padding: EdgeInsets.fromLTRB(
@@ -67,7 +69,7 @@ class HeroSection extends StatelessWidget {
           ? const Alignment(0.65, 0.05)
           : const Alignment(0, 0.55),
       glowSize: Responsive.isDesktop(context) ? 580 : 380,
-      child: isMobile
+      child: stacked
           ? content
           : SizedBox(
               height: screenHeight,
@@ -76,7 +78,7 @@ class HeroSection extends StatelessWidget {
             ),
     );
 
-    return (isMobile
+    return (stacked
             ? ConstrainedBox(
                 constraints: BoxConstraints(minHeight: screenHeight),
                 child: SizedBox(width: double.infinity, child: canvas),

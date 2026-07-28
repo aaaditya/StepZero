@@ -8,13 +8,15 @@ import 'package:stepzero/core/constants/brand.dart';
 import 'package:stepzero/core/theme/app_colors.dart';
 import 'package:stepzero/core/theme/app_spacing.dart';
 import 'package:stepzero/core/theme/app_typography.dart';
+import 'package:stepzero/features/home/presentation/widgets/final_cta_section.dart';
+import 'package:stepzero/features/home/presentation/widgets/transformation_section.dart';
 
 void main() {
   setUpAll(() {
     GoogleFonts.config.allowRuntimeFetching = false;
   });
 
-  testWidgets('StepZero hero boots with brand and primary CTA', (tester) async {
+  testWidgets('StepZero homepage boots hero and key sections', (tester) async {
     await tester.binding.setSurfaceSize(const Size(1440, 900));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -32,6 +34,10 @@ void main() {
     expect(find.textContaining('Every Great Business'), findsOneWidget);
     expect(find.text('Book a Discovery Call'), findsOneWidget);
     expect(find.text('View Our Work'), findsOneWidget);
+
+    // Sections are composed in the tree even if offstage in the viewport.
+    expect(find.byType(TransformationSection), findsOneWidget);
+    expect(find.byType(FinalCtaSection), findsOneWidget);
   });
 
   test('design tokens match brand specification', () {
