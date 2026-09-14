@@ -47,7 +47,7 @@ abstract final class StructuredData {
         'name': BrandDefaults.name,
         'url': BrandDefaults.siteUrl,
         'logo': '${BrandDefaults.siteUrl}/icons/Icon-512.png',
-        'email': 'hello@stepzero.studio',
+        'email': BrandDefaults.contactEmail,
       };
 
   static Map<String, Object?> article({

@@ -133,7 +133,8 @@ abstract final class SeoController {
     ),
     '/contact': PageMeta(
       title: 'Contact · StepZero',
-      description: 'Book a discovery call with StepZero. hello@stepzero.studio',
+      description:
+          'Book a discovery call with StepZero. ${BrandDefaults.contactEmail}',
       path: '/contact',
     ),
   };

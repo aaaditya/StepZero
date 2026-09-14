@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/analytics/analytics.dart';
 import '../../../../core/analytics/analytics_providers.dart';
 import '../../../../core/constants/app_layout.dart';
+import '../../../../core/constants/brand.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/seo/page_meta.dart';
 import '../../../../core/seo/seo_effect.dart';
@@ -114,7 +115,8 @@ class _ContactPageState extends ConsumerState<ContactPage> {
     return SeoEffect(
       meta: const PageMeta(
         title: 'Contact · StepZero',
-        description: 'Book a discovery call with StepZero. hello@stepzero.studio',
+        description:
+            'Book a discovery call with StepZero. ${Brand.contactEmail}',
         path: AppRoutes.contact,
       ),
       child: SectionLandmark(
@@ -231,7 +233,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Or email hello@stepzero.studio — no forms required.',
+            'Or email ${Brand.contactEmail} — no forms required.',
             style: AppTypography.captionStyle,
             textAlign: TextAlign.center,
           ),
@@ -239,7 +241,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
           Center(
             child: TextButton(
               onPressed: () => ExternalLink.mailto(
-                'hello@stepzero.studio',
+                Brand.contactEmail,
                 subject: 'Discovery call',
               ),
               child: const Text('Email us directly'),
@@ -300,9 +302,9 @@ class _ContactIntro extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         _InfoRow(
           icon: Icons.mail_outline,
-          title: 'hello@stepzero.studio',
+          title: Brand.contactEmail,
           body: 'Prefer email? We answer there too.',
-          onTap: () => ExternalLink.mailto('hello@stepzero.studio'),
+          onTap: () => ExternalLink.mailto(Brand.contactEmail),
         ),
       ],
     );

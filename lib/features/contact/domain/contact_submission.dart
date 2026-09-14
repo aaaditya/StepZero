@@ -1,3 +1,5 @@
+import '../../../core/constants/brand.dart';
+
 /// Contact lead submission contract.
 class ContactSubmission {
   const ContactSubmission({
@@ -52,7 +54,7 @@ class MockContactRepository implements ContactRepository {
 
     if (simulateFailure) {
       return const ContactSubmitResult.error(
-        'Something went wrong. Please email hello@stepzero.studio.',
+        'Something went wrong. Please email ${Brand.contactEmail}.',
       );
     }
 

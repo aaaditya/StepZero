@@ -75,7 +75,7 @@ Expected to find project root in current working directory.
 3. Preferred host is **apex** (`https://thestepzero.in`) — www redirects via `vercel.json`
 4. Canonical / OG / sitemap / robots use `Brand.siteUrl` = `https://thestepzero.in`
 
-Contact email may still be `hello@stepzero.studio` until mailbox is set up on `.in`.
+Contact email: `info@thestepzero.in` (`Brand.contactEmail`).
 
 ### Optional analytics env vars
 

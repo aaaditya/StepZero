@@ -1,3 +1,4 @@
+import '../../../core/constants/brand.dart';
 import '../../../core/routing/routes.dart';
 import '../domain/site_config.dart';
 
@@ -14,7 +15,7 @@ abstract final class SiteConfigCatalog {
         'strategy, branding, websites, AI automation, and digital growth.',
     primaryCtaLabel: 'Start a project',
     primaryCtaPath: AppRoutes.contact,
-    contactEmail: 'hello@stepzero.studio',
+    contactEmail: Brand.contactEmail,
     navigation: NavigationConfig(
       primary: [
         NavLink(label: 'Services', path: AppRoutes.services),

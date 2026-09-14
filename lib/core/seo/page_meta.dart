@@ -48,6 +48,7 @@ abstract final class BrandDefaults {
   static const String siteUrl = Brand.siteUrl;
   static const String ogImage = Brand.defaultOgImage;
   static const String name = Brand.name;
+  static const String contactEmail = Brand.contactEmail;
   static const String defaultTitle = Brand.defaultTitle;
   static const String defaultDescription = Brand.defaultDescription;
 }
