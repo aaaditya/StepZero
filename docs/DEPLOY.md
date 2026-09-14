@@ -62,10 +62,11 @@ Expected to find project root in current working directory.
 | Root Directory | `.` (repo root) |
 
 `scripts/vercel-build.sh` clones Flutter stable, enables web, runs
-`flutter pub get` and `flutter build web --release`.
+`flutter pub get`, `flutter build web --release`, then
+`node scripts/prerender-seo.mjs` (unique HTML shells per sitemap route + `404.html`).
 
 `vercel.json` also sets:
-- SPA rewrites so deep links work on refresh
+- **No SPA catch-all rewrite** — prerendered `path/index.html` files handle deep links; unknown paths return real **404** via `404.html`
 - **301 www → apex** (`www.thestepzero.in` → `https://thestepzero.in`)
 
 ### Custom domain (thestepzero.in)

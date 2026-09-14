@@ -1,0 +1,208 @@
+{
+  "siteUrl": "https://thestepzero.in",
+  "contactEmail": "info@thestepzero.in",
+  "ogImage": "https://thestepzero.in/og-image.png",
+  "routes": [
+    {
+      "path": "/",
+      "title": "StepZero — We build businesses people trust",
+      "description": "StepZero helps local businesses become premium brands through strategy, branding, websites, AI automation, and digital growth.",
+      "h1": "We build businesses people trust.",
+      "body": "StepZero is a premium business growth studio. We turn local operators into premium brands — and install the systems that make that growth compound. Brand before traffic. Limited projects per quarter."
+    },
+    {
+      "path": "/services",
+      "title": "Services — How we transform businesses · StepZero",
+      "description": "Brand, digital presence, automation, and growth systems for local businesses that want to feel premium.",
+      "h1": "Four systems. One operating stack.",
+      "body": "Brand strategy, digital presence, AI automation, and growth — installed in order so the business feels premium and runs with clarity."
+    },
+    {
+      "path": "/services/brand",
+      "title": "Brand Strategy · StepZero",
+      "description": "Positioning, audience truth, and identity systems that make local businesses feel premium.",
+      "h1": "Brand strategy",
+      "body": "Lock positioning, audience truth, and the reason to choose you — before pixels."
+    },
+    {
+      "path": "/services/digital-presence",
+      "title": "Digital Presence · StepZero",
+      "description": "Premium websites and local presence systems that convert trust into action.",
+      "h1": "Digital presence",
+      "body": "Websites, Google presence, and conversion architecture tuned for local operators."
+    },
+    {
+      "path": "/services/automation",
+      "title": "AI Automation · StepZero",
+      "description": "Chat, WhatsApp, and booking automation that replies while you work.",
+      "h1": "AI automation",
+      "body": "Always-on replies, booking, and FAQ automation with human handoff when it matters."
+    },
+    {
+      "path": "/services/growth",
+      "title": "Growth Systems · StepZero",
+      "description": "Acquisition and compounding growth systems that fit the brand — not random ads.",
+      "h1": "Growth systems",
+      "body": "Channel strategy, content that compounds, and paid only where it pays."
+    },
+    {
+      "path": "/work",
+      "title": "Work — Transformations · StepZero",
+      "description": "Case studies told completely — challenge, judgment, craft, and measurable business change.",
+      "h1": "Proof that order beats tactics.",
+      "body": "Featured transformations for clinics, restaurants, and local operators — brand, presence, automation, growth."
+    },
+    {
+      "path": "/work/northside-clinic",
+      "title": "Northside Clinic Case Study · StepZero",
+      "description": "How StepZero transformed Northside Clinic through brand, digital presence, and growth systems.",
+      "type": "article",
+      "h1": "Northside Clinic",
+      "body": "A full transformation case study — challenge, strategy, craft, and measurable outcomes."
+    },
+    {
+      "path": "/work/oven-and-oak",
+      "title": "Oven & Oak Case Study · StepZero",
+      "description": "How StepZero rebuilt Oven & Oak into a premium local brand with compounding systems.",
+      "type": "article",
+      "h1": "Oven & Oak",
+      "body": "Restaurant transformation — identity, digital presence, automation, and growth."
+    },
+    {
+      "path": "/articles",
+      "title": "Insights · StepZero",
+      "description": "Short essays for operators who want clarity — brand, digital, and automation thinking.",
+      "h1": "Clarity before commitment.",
+      "body": "Operator essays on brand-before-traffic, digital surfaces, and automation that stays human."
+    },
+    {
+      "path": "/articles/brand-before-traffic",
+      "title": "Brand Before Traffic · StepZero",
+      "description": "Why identity and positioning must come before paid acquisition.",
+      "type": "article",
+      "h1": "Brand before traffic",
+      "body": "Traffic without trust is expensive noise. Start with identity."
+    },
+    {
+      "path": "/articles/qr-menu-brand-surface",
+      "title": "QR Menus as Brand Surfaces · StepZero",
+      "description": "How QR menus became a brand and conversion surface — not just a PDF.",
+      "type": "article",
+      "h1": "QR menus as brand surfaces",
+      "body": "Treat every digital touchpoint as craft, including the QR menu."
+    },
+    {
+      "path": "/articles/automation-still-human",
+      "title": "Automation That Stays Human · StepZero",
+      "description": "Designing AI automation with clear human handoff for local businesses.",
+      "type": "article",
+      "h1": "Automation that stays human",
+      "body": "Automate the repetitive. Keep judgment where customers feel it."
+    },
+    {
+      "path": "/testimonials",
+      "title": "Testimonials · StepZero",
+      "description": "Operators, in their own words — proof as voice, not star ratings.",
+      "h1": "In their own words.",
+      "body": "Owners who rebuilt identity, presence, and systems with StepZero."
+    },
+    {
+      "path": "/team",
+      "title": "Team · StepZero",
+      "description": "The people behind the craft — a small studio of senior operators.",
+      "h1": "A small studio of senior operators.",
+      "body": "Limited projects. Senior craft. No pitch theater."
+    },
+    {
+      "path": "/faq",
+      "title": "FAQ · StepZero",
+      "description": "Straight answers about engagements, timelines, and how StepZero works.",
+      "h1": "Straight answers.",
+      "body": "What operators usually ask about discovery calls, timelines, and engagement shapes."
+    },
+    {
+      "path": "/pricing",
+      "title": "Pricing · StepZero",
+      "description": "Clear engagement shapes — Foundation, Transformation, and Compound retainers.",
+      "h1": "Clear engagement shapes.",
+      "body": "Foundation, Transformation, and Compound — priced for operators who want seriousness, not packages."
+    },
+    {
+      "path": "/industries",
+      "title": "Industries · StepZero",
+      "description": "Built for restaurants, cafés, salons, clinics, gyms, retail, hotels, and real estate.",
+      "h1": "Built for operators who want to feel premium.",
+      "body": "Same craft as global brands — tuned to the economics and rituals of your category."
+    },
+    {
+      "path": "/industries/restaurants",
+      "title": "Restaurants · StepZero",
+      "description": "Premium brand and growth systems for restaurants.",
+      "h1": "Restaurants",
+      "body": "Identity, digital presence, and automation for dining rooms that want to feel premium."
+    },
+    {
+      "path": "/industries/cafes",
+      "title": "Cafés · StepZero",
+      "description": "Brand and digital systems for cafés that want loyal regulars.",
+      "h1": "Cafés",
+      "body": "Craft a café brand and presence that compounds daily."
+    },
+    {
+      "path": "/industries/salons",
+      "title": "Salons · StepZero",
+      "description": "Premium positioning and booking systems for salons.",
+      "h1": "Salons",
+      "body": "Positioning, presence, and booking automation for salons."
+    },
+    {
+      "path": "/industries/clinics",
+      "title": "Clinics · StepZero",
+      "description": "Trusted brand and growth systems for clinics.",
+      "h1": "Clinics",
+      "body": "Trust-first brand and digital systems for clinics."
+    },
+    {
+      "path": "/industries/gyms",
+      "title": "Gyms · StepZero",
+      "description": "Brand and membership growth systems for gyms.",
+      "h1": "Gyms",
+      "body": "Membership-aware brand and growth systems for gyms."
+    },
+    {
+      "path": "/industries/retail",
+      "title": "Retail · StepZero",
+      "description": "Premium brand and digital systems for retail stores.",
+      "h1": "Retail",
+      "body": "Store identity and digital presence that feel as considered as the product."
+    },
+    {
+      "path": "/industries/hotels",
+      "title": "Hotels · StepZero",
+      "description": "Hospitality brand and booking presence systems.",
+      "h1": "Hotels",
+      "body": "Hospitality craft across brand, booking, and guest communication."
+    },
+    {
+      "path": "/industries/real-estate",
+      "title": "Real Estate · StepZero",
+      "description": "Trusted brand and lead systems for real estate operators.",
+      "h1": "Real estate",
+      "body": "Authority brand and lead systems for real estate."
+    },
+    {
+      "path": "/about",
+      "title": "About · StepZero",
+      "description": "A studio for operators who want to feel premium — strategy, branding, websites, AI, growth.",
+      "h1": "The difference is the operating system.",
+      "body": "We don’t sell websites. We install the order that makes deliverables matter."
+    },
+    {
+      "path": "/contact",
+      "title": "Contact · StepZero",
+      "description": "Book a discovery call with StepZero. info@thestepzero.in",
+      "h1": "Start a conversation.",
+      "body": "Tell us where you are — brand, website, growth, or chaos. We’ll tell you the honest next step. Email info@thestepzero.in."
+    }
+  ]
+}
