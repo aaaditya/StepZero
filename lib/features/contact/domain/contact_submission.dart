@@ -1,6 +1,3 @@
-/// Contact lead submission contract.
-library;
-
 import '../../../core/constants/brand.dart';
 
 /// Contact lead submission contract.
@@ -57,7 +54,7 @@ class MockContactRepository implements ContactRepository {
 
     if (simulateFailure) {
       return const ContactSubmitResult.error(
-        'Something went wrong. Please email info@thestepzero.in.',
+        'Something went wrong. Please email ${Brand.contactEmail}.',
       );
     }
 

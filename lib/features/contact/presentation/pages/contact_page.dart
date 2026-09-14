@@ -233,7 +233,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Or email info@thestepzero.in — no forms required.',
+            'Or email ${Brand.contactEmail} — no forms required.',
             style: AppTypography.captionStyle,
             textAlign: TextAlign.center,
           ),
@@ -241,7 +241,7 @@ class _ContactPageState extends ConsumerState<ContactPage> {
           Center(
             child: TextButton(
               onPressed: () => ExternalLink.mailto(
-                'info@thestepzero.in',
+                Brand.contactEmail,
                 subject: 'Discovery call',
               ),
               child: const Text('Email us directly'),
@@ -302,9 +302,9 @@ class _ContactIntro extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         _InfoRow(
           icon: Icons.mail_outline,
-          title: 'info@thestepzero.in',
+          title: Brand.contactEmail,
           body: 'Prefer email? We answer there too.',
-          onTap: () => ExternalLink.mailto('info@thestepzero.in'),
+          onTap: () => ExternalLink.mailto(Brand.contactEmail),
         ),
       ],
     );

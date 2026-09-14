@@ -58,7 +58,7 @@ void main() {
       final footer = SiteConfigCatalog.settings.footer;
       expect(footer.columns, isNotEmpty);
       expect(footer.socials, isNotEmpty);
-      expect(SiteConfigCatalog.settings.contactEmail, contains('@'));
+      expect(SiteConfigCatalog.settings.contactEmail, 'info@thestepzero.in');
     });
   });
 }
