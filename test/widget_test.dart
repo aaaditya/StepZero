@@ -57,7 +57,7 @@ void main() {
   test('SEO controller resolves route metadata', () {
     final home = SeoController.forPath('/');
     expect(home.title, contains('StepZero'));
-    expect(home.canonicalUrl, 'https://stepzero.studio/');
+    expect(home.canonicalUrl, 'https://thestepzero.in/');
     expect(home.imageUrl, BrandDefaults.ogImage);
 
     final work = SeoController.forPath('/work');
@@ -74,6 +74,6 @@ void main() {
       description: 'Desc',
       path: '/pricing',
     );
-    expect(meta.canonicalUrl, 'https://stepzero.studio/pricing');
+    expect(meta.canonicalUrl, 'https://thestepzero.in/pricing');
   });
 }
