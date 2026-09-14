@@ -64,7 +64,18 @@ Expected to find project root in current working directory.
 `scripts/vercel-build.sh` clones Flutter stable, enables web, runs
 `flutter pub get` and `flutter build web --release`.
 
-`vercel.json` also sets SPA rewrites so deep links work on refresh.
+`vercel.json` also sets:
+- SPA rewrites so deep links work on refresh
+- **301 www → apex** (`www.thestepzero.in` → `https://thestepzero.in`)
+
+### Custom domain (thestepzero.in)
+
+1. Vercel → Project → Domains → add `thestepzero.in` and `www.thestepzero.in`
+2. Point GoDaddy DNS (A `@` → Vercel IP, CNAME `www` → Vercel)
+3. Preferred host is **apex** (`https://thestepzero.in`) — www redirects via `vercel.json`
+4. Canonical / OG / sitemap / robots use `Brand.siteUrl` = `https://thestepzero.in`
+
+Contact email may still be `hello@stepzero.studio` until mailbox is set up on `.in`.
 
 ### Optional analytics env vars
 

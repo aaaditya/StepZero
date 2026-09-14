@@ -3,6 +3,14 @@
   "outputDirectory": "build/web",
   "framework": null,
   "installCommand": "echo 'Flutter install handled in buildCommand'",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.thestepzero.in" }],
+      "destination": "https://thestepzero.in/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ],

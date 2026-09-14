@@ -8,7 +8,7 @@ abstract final class Brand {
       'strategy, branding, websites, AI automation, and digital growth.';
 
   /// Canonical production origin (no trailing slash).
-  static const String siteUrl = 'https://stepzero.studio';
+  static const String siteUrl = 'https://thestepzero.in';
 
   /// Default share image (absolute URL for crawlers).
   static const String defaultOgImage = '$siteUrl/og-image.png';
