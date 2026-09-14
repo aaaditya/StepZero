@@ -24,4 +24,7 @@ flutter config --no-analytics --enable-web
 flutter pub get
 flutter build web --release --no-tree-shake-icons
 
+echo "→ Prerendering SEO HTML shells"
+node "$ROOT/scripts/prerender-seo.mjs"
+
 echo "→ Output: $ROOT/build/web"
