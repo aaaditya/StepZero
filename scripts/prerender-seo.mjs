@@ -71,19 +71,21 @@ function replaceMeta(html, { title, description, canonical, image, type, noIndex
     );
   }
 
-  // Patch JSON-LD WebSite / Organization urls in static graph.
-  out = out.replaceAll('https://thestepzero.in/', canonical.endsWith('/') ? canonical : `${canonical}/`);
-  // Avoid mangling OG image / logo paths when canonical is a deep route.
-  // Re-run careful replacements for @id website/service urls only via simpler approach:
-  // restore logo + og image absolute roots after blanket replace if needed.
-  out = out.replaceAll(
-    `${canonical.endsWith('/') ? canonical.slice(0, -1) : canonical}/og-image.png`,
-    image,
-  );
-  out = out.replaceAll(
-    `${canonical.endsWith('/') ? canonical.slice(0, -1) : canonical}/icons/Icon-512.png`,
-    'https://thestepzero.in/icons/Icon-512.png',
-  );
+  // Keep Organization / WebSite / ProfessionalService rooted at the site.
+  // Add a WebPage node for this route (idempotent).
+  if (!out.includes('"@type": "WebPage"') && !out.includes('"@type":"WebPage"')) {
+    const webPage = `{
+        "@type": "WebPage",
+        "@id": "${escapeHtml(canonical)}#webpage",
+        "url": "${escapeHtml(canonical)}",
+        "name": "${escapeHtml(title)}",
+        "description": "${escapeHtml(description)}",
+        "isPartOf": { "@id": "https://thestepzero.in/#website" },
+        "about": { "@id": "https://thestepzero.in/#organization" },
+        "inLanguage": "en-US"
+      },`;
+    out = out.replace('"@graph": [', `"@graph": [\n      ${webPage}`);
+  }
 
   return out;
 }
@@ -138,19 +140,12 @@ function injectCrawlable(html, route, siteUrl, email) {
     );
   }
 
-  // CSS for seo-content: available to crawlers/DOM, visually deferred after hydrate.
-  if (!out.includes('#seo-content')) {
+  // Keep #seo-content in the DOM for crawlers, visually hidden to avoid CLS/LCP fights.
+  if (!out.includes('#seo-content {')) {
     out = out.replace(
       'noscript a { color: #5B5FEF; }',
       `noscript a { color: #5B5FEF; }
     #seo-content {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 24px;
-      line-height: 1.6;
-      color: #111111;
-    }
-    #seo-content[data-hydrated="true"] {
       position: absolute;
       width: 1px;
       height: 1px;
