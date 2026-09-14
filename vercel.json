@@ -5,9 +5,15 @@
   "installCommand": "echo 'Flutter install handled in buildCommand'",
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/",
       "has": [{ "type": "host", "value": "www.thestepzero.in" }],
-      "destination": "https://thestepzero.in/:path*",
+      "destination": "https://thestepzero.in/",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.thestepzero.in" }],
+      "destination": "https://thestepzero.in/$1",
       "permanent": true
     }
   ],

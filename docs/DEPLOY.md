@@ -73,7 +73,9 @@ Expected to find project root in current working directory.
 1. Vercel → Project → Domains → add `thestepzero.in` and `www.thestepzero.in`
 2. Point GoDaddy DNS (A `@` → Vercel IP, CNAME `www` → Vercel)
 3. Preferred host is **apex** (`https://thestepzero.in`) — www redirects via `vercel.json`
-4. Canonical / OG / sitemap / robots use `Brand.siteUrl` = `https://thestepzero.in`
+4. In Vercel → Domains, also set **www.thestepzero.in → Redirect to thestepzero.in**
+   (dashboard redirect is the most reliable preferred-host switch)
+5. Canonical / OG / sitemap / robots use `Brand.siteUrl` = `https://thestepzero.in`
 
 Contact email: `info@thestepzero.in` (`Brand.contactEmail`).
 
