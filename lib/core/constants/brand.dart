@@ -10,6 +10,9 @@ abstract final class Brand {
   /// Canonical production origin (no trailing slash).
   static const String siteUrl = 'https://thestepzero.in';
 
+  /// Public contact inbox.
+  static const String contactEmail = 'info@thestepzero.in';
+
   /// Default share image (absolute URL for crawlers).
   static const String defaultOgImage = '$siteUrl/og-image.png';
 
