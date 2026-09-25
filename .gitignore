@@ -55,6 +55,7 @@ node_modules/
 !.yarn/versions
 coverage
 .next/
+build/web/
 out/
 .DS_Store
 *.pem
