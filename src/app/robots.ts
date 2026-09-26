@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { contact } from "../lib/contact";
+import { site } from "../lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,7 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: `${contact.siteUrl}/sitemap.xml`,
-    host: contact.siteUrl,
+    sitemap: `${site.siteUrl}/sitemap.xml`,
   };
 }

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "../components/Analytics";
 import { JsonLd } from "../components/JsonLd";
+import { SiteFooter } from "../components/SiteFooter";
+import { SiteHeader } from "../components/SiteHeader";
+import { site } from "../lib/site";
 import "./globals.css";
 
 const display = Source_Serif_4({
@@ -21,42 +24,48 @@ const sans = IBM_Plex_Sans({
   adjustFontFallback: true,
 });
 
-const title = "StepZero | Websites, Automation & Tech Help";
-const description =
-  "StepZero builds websites, sets up automation workflows, and provides hands-on tech help. Clear scope, straight answers, work that ships.";
-
 export const metadata: Metadata = {
-  metadataBase: new URL("https://thestepzero.in"),
+  metadataBase: new URL(site.siteUrl),
   title: {
-    default: title,
-    template: "%s | StepZero",
+    default: site.defaultTitle,
+    template: `%s | ${site.brand}`,
   },
-  description,
+  description: site.defaultDescription,
   keywords: [
     "StepZero",
-    "websites",
-    "website design",
-    "automation",
+    "custom SaaS",
+    "custom SaaS development",
+    "custom software development",
+    "MVP development",
+    "software development India",
+    "SaaS studio India",
     "business automation",
-    "tech help",
-    "tech support",
-    "workflows",
+    "websites",
   ],
-  authors: [{ name: "StepZero", url: "https://thestepzero.in" }],
-  creator: "StepZero",
+  authors: [{ name: site.brand, url: site.siteUrl }],
+  creator: site.brand,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    url: "https://thestepzero.in",
-    siteName: "StepZero",
-    title,
-    description,
+    url: site.siteUrl,
+    siteName: site.brand,
+    title: site.defaultTitle,
+    description: site.defaultDescription,
     locale: "en_IN",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "StepZero — Custom SaaS & Software Development Studio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title,
-    description,
+    title: site.defaultTitle,
+    description: site.defaultDescription,
+    images: ["/opengraph-image"],
   },
   robots: { index: true, follow: true },
   icons: {
@@ -77,7 +86,11 @@ export default function RootLayout({
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body>
         <JsonLd />
-        {children}
+        <div className="site">
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </div>
         <Analytics />
       </body>
     </html>

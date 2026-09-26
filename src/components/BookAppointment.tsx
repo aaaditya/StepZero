@@ -1,6 +1,4 @@
-"use client";
-
-import { mailtoBookingUrl, whatsappBookingUrl } from "../lib/contact";
+import { primaryBookingUrl, whatsappBookingUrl } from "../lib/site";
 
 type Props = {
   label?: string;
@@ -9,30 +7,27 @@ type Props = {
 };
 
 /**
- * Opens WhatsApp (when configured) and starts an email in parallel.
- * No hover motion theater. Instant feedback via :active only.
+ * Real booking link: WhatsApp when NEXT_PUBLIC_WHATSAPP_E164 is set, else mailto.
+ * No onClick theater — crawlable `<a href>`.
  */
 export function BookAppointment({
-  label = "Book an appointment",
+  label = "Book a call",
   className = "",
   id,
 }: Props) {
-  function handleClick() {
-    const wa = whatsappBookingUrl();
-    if (wa) {
-      window.open(wa, "_blank", "noopener,noreferrer");
-    }
-    window.location.href = mailtoBookingUrl();
-  }
+  const href = primaryBookingUrl();
+  const isWhatsApp = Boolean(whatsappBookingUrl());
 
   return (
-    <button
+    <a
       id={id}
-      type="button"
-      onClick={handleClick}
+      href={href}
       className={`book-btn ${className}`.trim()}
+      {...(isWhatsApp
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
     >
       {label}
-    </button>
+    </a>
   );
 }
