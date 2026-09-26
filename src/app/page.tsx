@@ -1,7 +1,23 @@
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { BookAppointment } from "../components/BookAppointment";
-import { IntakeDemo } from "../components/IntakeDemo";
 import { contact } from "../lib/contact";
+
+/** Defer intake demo JS — noncritical for first paint / SEO. */
+const IntakeDemo = dynamic(
+  () =>
+    import("../components/IntakeDemo").then((m) => m.IntakeDemo),
+  {
+    loading: () => (
+      <section className="demo" aria-labelledby="demo-title">
+        <div className="section-meta">
+          <h2 id="demo-title">Intake preview</h2>
+          <p className="lede">Loading demo…</p>
+        </div>
+      </section>
+    ),
+  },
+);
 
 const services = [
   {
@@ -56,10 +72,12 @@ export default function HomePage() {
       <main>
         <section className="hero" aria-label="Introduction">
           <div className="hero__copy">
-            <h1>Get online. Automate the busywork. Fix what breaks.</h1>
+            <h1>
+              Websites, automation, and tech help — without the runaround
+            </h1>
             <p className="hero__statement">
-              StepZero helps anyone who needs a website, automation, or
-              hands-on tech help. Clear scope. Straight answers.
+              StepZero helps you get online, automate busywork, and fix what
+              breaks. Clear scope. Straight answers. Work that ships.
             </p>
             <div className="hero__actions">
               <BookAppointment label="Book an appointment" />
@@ -68,11 +86,12 @@ export default function HomePage() {
           <figure className="hero__media">
             <Image
               src="/hero-utility-desk.png"
-              alt="Laptop and notebook on a clean desk, ready for focused work"
-              width={1600}
-              height={1000}
+              alt="Laptop and notebook on a clean desk — StepZero websites, automation, and tech help workspace"
+              width={1280}
+              height={720}
               priority
               sizes="(max-width: 860px) 100vw, 48vw"
+              style={{ width: "100%", height: "auto" }}
             />
           </figure>
         </section>
@@ -83,7 +102,9 @@ export default function HomePage() {
           aria-labelledby="services-title"
         >
           <div className="section-meta">
-            <h2 id="services-title">What we help with</h2>
+            <h2 id="services-title">
+              Website, automation, and tech services
+            </h2>
             <p className="lede">
               Practical work for people and businesses who need to be online,
               save time, or get tech problems resolved.
@@ -108,7 +129,7 @@ export default function HomePage() {
           aria-labelledby="process-title"
         >
           <div className="section-meta">
-            <h2 id="process-title">How it works</h2>
+            <h2 id="process-title">How website and automation projects run</h2>
             <p className="lede">
               A short path from first message to something you can run without
               us in the room.
