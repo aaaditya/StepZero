@@ -11,7 +11,7 @@ export const contact = {
 } as const;
 
 export const bookingMessage =
-  "Hi StepZero. I want to book an appointment to discuss growing my business.";
+  "Hi StepZero. I want to book an appointment to discuss web, automation, or tech help.";
 
 export function whatsappBookingUrl(message = bookingMessage): string | null {
   if (!contact.whatsappE164) return null;
@@ -19,6 +19,6 @@ export function whatsappBookingUrl(message = bookingMessage): string | null {
 }
 
 export function mailtoBookingUrl(message = bookingMessage): string {
-  const subject = "Book an appointment · StepZero";
+  const subject = "Book an appointment - StepZero";
   return `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
 }
