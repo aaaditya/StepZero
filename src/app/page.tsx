@@ -1,66 +1,39 @@
+import Image from "next/image";
 import { BookAppointment } from "../components/BookAppointment";
 import { IntakeDemo } from "../components/IntakeDemo";
 import { contact } from "../lib/contact";
 
 const services = [
   {
-    idx: "01",
-    title: "Positioning and brand",
-    body: "Lock the reason a stranger should trust you before you spend another rupee on ads.",
+    title: "Websites that work",
+    body: "A clear site that explains what you do, answers the usual questions, and makes it easy to get in touch.",
   },
   {
-    idx: "02",
-    title: "Website that books",
-    body: "A site that answers the five questions buyers ask at 11pm, then pushes them into a booking path.",
+    title: "Automation and workflows",
+    body: "Forms, WhatsApp confirmations, intake routing, and follow-ups so busywork stops living in your head.",
   },
   {
-    idx: "03",
-    title: "Ops automation",
-    body: "WhatsApp confirmations, intake routing, and follow-ups that keep the desk sane after hours.",
+    title: "Brand that reads clearly",
+    body: "Name, message, and visuals that feel trustworthy online without looking like every other template.",
   },
   {
-    idx: "04",
-    title: "Growth loop",
-    body: "Reviews, referrals, and repeat visits wired so reputation compounds instead of resetting monthly.",
+    title: "Hands-on tech help",
+    body: "Broken tools, messy setups, domain issues, migrations. We diagnose, fix, and leave you with notes.",
   },
 ];
 
 const steps = [
   {
-    idx: "A",
-    title: "Diagnosis call",
-    body: "30 minutes. We map demand, leaks, and what is actually worth fixing first.",
+    title: "Tell us what you need",
+    body: "A short call or message. We map the problem, the urgency, and what is worth fixing first.",
   },
   {
-    idx: "B",
-    title: "Scoped build",
-    body: "One written plan. Brand, site, automation. No mystery retainers on day one.",
+    title: "Agree on a scoped plan",
+    body: "One written plan with deliverables and timing. No mystery retainers on day one.",
   },
   {
-    idx: "C",
-    title: "Install and train",
-    body: "We ship, hand over the operating notes, and stay until the front desk can run it cold.",
-  },
-];
-
-const proof = [
-  {
-    client: "Northside Clinic",
-    sector: "Healthcare",
-    change: "Booking path + WhatsApp confirmations",
-    signal: "+142% bookings",
-  },
-  {
-    client: "Harbor & Oak",
-    sector: "Hospitality",
-    change: "Brand reset + conversion site",
-    signal: "2.1x dinner covers",
-  },
-  {
-    client: "Veldt Salon",
-    sector: "Beauty",
-    change: "Identity + after-hours intake",
-    signal: "-31% no-shows",
+    title: "Build, ship, hand over",
+    body: "We implement, walk you through it, and stay until you can run the system without us.",
   },
 ];
 
@@ -68,17 +41,12 @@ export default function HomePage() {
   return (
     <div className="site">
       <header className="topbar">
-        <div>
-          <a className="brand-mark" href="/">
-            StepZero
-          </a>
-          <p className="brand-meta">
-            Growth studio · Local operators · EST. systems
-          </p>
-        </div>
+        <a className="brand-mark" href="/">
+          StepZero
+        </a>
         <nav className="nav-links" aria-label="Primary">
-          <a href="#work">Work</a>
-          <a href="#system">System</a>
+          <a href="#services">Services</a>
+          <a href="#process">Process</a>
           <a href="#demo">Demo</a>
           <a href="#book">Book</a>
           <BookAppointment />
@@ -87,60 +55,44 @@ export default function HomePage() {
 
       <main>
         <section className="hero" aria-label="Introduction">
-          <div className="hero__main">
-            <p className="kicker">FILE / HOME · PUBLIC</p>
-            <h1>
-              Build the
-              <br />
-              business
-              <br />
-              people trust.
-            </h1>
-            <div className="hero__rule" aria-hidden="true" />
+          <div className="hero__copy">
+            <h1>Get online. Automate the busywork. Fix what breaks.</h1>
             <p className="hero__statement">
-              StepZero installs brand, website, and booking systems for clinics,
-              salons, restaurants, and local operators who are done looking
-              interchangeable online.
+              StepZero helps anyone who needs a website, automation, or
+              hands-on tech help. Clear scope. Straight answers.
             </p>
+            <div className="hero__actions">
+              <BookAppointment label="Book an appointment" />
+            </div>
           </div>
-          <aside className="hero__side" aria-label="Operating facts">
-            <dl>
-              <div>
-                <dt>Primary action</dt>
-                <dd>Book a diagnosis</dd>
-              </div>
-              <div>
-                <dt>Response window</dt>
-                <dd>Same business day</dd>
-              </div>
-              <div>
-                <dt>Engagement shape</dt>
-                <dd>Scoped build</dd>
-              </div>
-              <div>
-                <dt>Contact rail</dt>
-                <dd>
-                  WhatsApp
-                  <br />+ email
-                </dd>
-              </div>
-            </dl>
-          </aside>
+          <figure className="hero__media">
+            <Image
+              src="/hero-utility-desk.png"
+              alt="Laptop and notebook on a clean desk, ready for focused work"
+              width={1600}
+              height={1000}
+              priority
+              sizes="(max-width: 860px) 100vw, 48vw"
+            />
+          </figure>
         </section>
 
-        <section className="section" id="system" aria-labelledby="system-title">
+        <section
+          className="section"
+          id="services"
+          aria-labelledby="services-title"
+        >
           <div className="section-meta">
-            <p className="kicker">UNIT / SYSTEM</p>
-            <h2 id="system-title">What gets installed</h2>
+            <h2 id="services-title">What we help with</h2>
             <p className="lede">
-              Four layers. Shipped in order. Sold as one operating stack, not a
-              menu of disconnected extras.
+              Practical work for people and businesses who need to be online,
+              save time, or get tech problems resolved.
             </p>
           </div>
           <ol className="index-list">
             {services.map((item) => (
-              <li key={item.idx}>
-                <span className="idx">{item.idx}</span>
+              <li key={item.title}>
+                <span className="idx" aria-hidden="true" />
                 <div>
                   <h3>{item.title}</h3>
                   <p>{item.body}</p>
@@ -150,19 +102,22 @@ export default function HomePage() {
           </ol>
         </section>
 
-        <section className="section" aria-labelledby="method-title">
+        <section
+          className="section"
+          id="process"
+          aria-labelledby="process-title"
+        >
           <div className="section-meta">
-            <p className="kicker">UNIT / METHOD</p>
-            <h2 id="method-title">How an engagement runs</h2>
+            <h2 id="process-title">How it works</h2>
             <p className="lede">
-              Short path from first call to a system your team can operate
-              without us in the room.
+              A short path from first message to something you can run without
+              us in the room.
             </p>
           </div>
           <ol className="index-list">
             {steps.map((item) => (
-              <li key={item.idx}>
-                <span className="idx">{item.idx}</span>
+              <li key={item.title}>
+                <span className="idx" aria-hidden="true" />
                 <div>
                   <h3>{item.title}</h3>
                   <p>{item.body}</p>
@@ -170,39 +125,6 @@ export default function HomePage() {
               </li>
             ))}
           </ol>
-        </section>
-
-        <section className="section" id="work" aria-labelledby="work-title">
-          <div className="section-meta">
-            <p className="kicker">UNIT / PROOF</p>
-            <h2 id="work-title">Selected results</h2>
-            <p className="lede">
-              Measured outcomes from recent installs. Quotes live in private
-              debriefs. Numbers live here.
-            </p>
-          </div>
-          <div className="proof-wrap">
-            <table className="proof-table">
-              <thead>
-                <tr>
-                  <th scope="col">Client</th>
-                  <th scope="col">Sector</th>
-                  <th scope="col">Install</th>
-                  <th scope="col">Signal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {proof.map((row) => (
-                  <tr key={row.client}>
-                    <td>{row.client}</td>
-                    <td>{row.sector}</td>
-                    <td>{row.change}</td>
-                    <td>{row.signal}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </section>
 
         <div id="demo">
@@ -211,17 +133,16 @@ export default function HomePage() {
 
         <section className="book-band" id="book" aria-labelledby="book-title">
           <div>
-            <p className="kicker">UNIT / BOOKING</p>
             <h2 id="book-title">Book an appointment</h2>
             <p className="lede">
-              One tap opens WhatsApp with a prefilled note and starts an email
-              to {contact.email}. Tell us the business, the city, and the
-              bottleneck. We reply with times.
+              One tap opens WhatsApp when configured and starts an email to{" "}
+              {contact.email}. Tell us what you need and where you are stuck.
+              We reply with times.
             </p>
           </div>
           <BookAppointment
             className="book-btn--block"
-            label="WhatsApp + email"
+            label="Book an appointment"
           />
         </section>
 
@@ -247,8 +168,8 @@ export default function HomePage() {
           </p>
           <h3>Limitation</h3>
           <p>
-            We do not guarantee specific revenue outcomes. Marketing results
-            depend on offer quality, operations, and demand outside our control.
+            We do not guarantee specific revenue outcomes. Results depend on
+            offer quality, operations, and demand outside our control.
           </p>
         </section>
 
@@ -275,13 +196,13 @@ export default function HomePage() {
           <h3>Contact</h3>
           <p>
             Privacy questions: {contact.email}. Operator: StepZero, operating
-            from India, serving local businesses worldwide.
+            from India, serving clients worldwide.
           </p>
         </section>
       </main>
 
       <footer className="footer">
-        <p>© {new Date().getFullYear()} StepZero · All rights reserved</p>
+        <p>© {new Date().getFullYear()} StepZero. All rights reserved.</p>
         <p>
           <a href="#terms">Terms</a>
           {" / "}

@@ -10,7 +10,7 @@ type Props = {
 
 /**
  * Opens WhatsApp (when configured) and starts an email in parallel.
- * No hover motion. Instant feedback via :active only.
+ * No hover motion theater. Instant feedback via :active only.
  */
 export function BookAppointment({
   label = "Book an appointment",
@@ -32,10 +32,7 @@ export function BookAppointment({
       onClick={handleClick}
       className={`book-btn ${className}`.trim()}
     >
-      <span className="book-btn__index" aria-hidden="true">
-        [ BOOK ]
-      </span>
-      <span className="book-btn__label">{label}</span>
+      {label}
     </button>
   );
 }
