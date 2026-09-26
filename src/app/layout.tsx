@@ -1,34 +1,33 @@
 import type { Metadata } from "next";
-import { Archivo_Black, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 
-const display = Archivo_Black({
-  weight: "400",
+const display = Source_Serif_4({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
 });
 
-const mono = IBM_Plex_Mono({
-  weight: ["400", "500"],
+const sans = IBM_Plex_Sans({
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-sans",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://thestepzero.in"),
-  title: "StepZero | Growth systems for local businesses",
+  title: "StepZero | Web, automation, and tech help",
   description:
-    "StepZero builds brand, website, and booking systems for clinics, salons, restaurants, and local operators who need trust that converts.",
+    "StepZero helps anyone who needs to get online, automate busywork, or solve tech problems. Clear scope. Straight answers. Work that ships.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: "https://thestepzero.in",
     siteName: "StepZero",
-    title: "StepZero | Growth systems for local businesses",
+    title: "StepZero | Web, automation, and tech help",
     description:
-      "Brand, web, and booking systems for local businesses that need to look as serious as the work they already do.",
+      "Websites, automation, and hands-on tech help for people and businesses who need things fixed and running.",
   },
   robots: { index: true, follow: true },
 };
@@ -39,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${display.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body>{children}</body>
     </html>
   );

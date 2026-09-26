@@ -2,6 +2,8 @@
 
 Marketing site lives at the **repo root** (hoisted from `site/`) so Vercel detects `next` in `package.json` without a Root Directory override.
 
+Visual direction: **Utility modern** (paper background, deep teal accent, Source Serif 4 + IBM Plex Sans). Single page with Book Appointment, intake demo, Terms, and Privacy.
+
 ## Local
 
 ```bash
