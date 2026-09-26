@@ -1,12 +1,12 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { BookAppointment } from "../components/BookAppointment";
-import { contact } from "../lib/contact";
+import { site } from "../lib/site";
 
-/** Defer intake demo JS — noncritical for first paint / SEO. */
 const IntakeDemo = dynamic(
-  () =>
-    import("../components/IntakeDemo").then((m) => m.IntakeDemo),
+  () => import("../components/IntakeDemo").then((m) => m.IntakeDemo),
   {
     loading: () => (
       <section className="demo" aria-labelledby="demo-title">
@@ -19,219 +19,167 @@ const IntakeDemo = dynamic(
   },
 );
 
-const services = [
+export const metadata: Metadata = {
+  title: {
+    absolute: site.defaultTitle,
+  },
+  description: site.defaultDescription,
+  alternates: { canonical: "/" },
+};
+
+const pillars = [
   {
-    title: "Websites that work",
-    body: "A clear site that explains what you do, answers the usual questions, and makes it easy to get in touch.",
+    href: "/services/custom-saas-development",
+    title: "Custom SaaS development",
+    body: "Multi-tenant products, billing, roles, and admin surfaces built for how your customers actually work — not a template bolted onto a spreadsheet.",
   },
   {
-    title: "Automation and workflows",
-    body: "Forms, WhatsApp confirmations, intake routing, and follow-ups so busywork stops living in your head.",
+    href: "/services/mvp-development",
+    title: "MVP development",
+    body: "A focused first release in weeks, not quarters. Scope that survives contact with users, with instrumentation so you know what to build next.",
   },
   {
-    title: "Brand that reads clearly",
-    body: "Name, message, and visuals that feel trustworthy online without looking like every other template.",
+    href: "/services/automation",
+    title: "Automation & workflows",
+    body: "Intake, WhatsApp confirmations, CRM sync, and follow-ups that remove busywork without locking you into a brittle no-code maze.",
   },
   {
-    title: "Hands-on tech help",
-    body: "Broken tools, messy setups, domain issues, migrations. We diagnose, fix, and leave you with notes.",
+    href: "/services/websites",
+    title: "Websites that convert",
+    body: "Clear sites for studios and operators who need trust online — message, structure, and booking paths that match the product behind them.",
   },
 ];
 
-const steps = [
+const why = [
   {
-    title: "Tell us what you need",
-    body: "A short call or message. We map the problem, the urgency, and what is worth fixing first.",
+    title: "Studio, not body shop",
+    body: "You work with people who own scope, architecture, and delivery — not a rotating bench that disappears after kickoff.",
   },
   {
-    title: "Agree on a scoped plan",
-    body: "One written plan with deliverables and timing. No mystery retainers on day one.",
+    title: "India-based, globally usable",
+    body: `We operate from ${site.serviceArea} and ship for clients in ${site.countriesServed.slice(0, 3).join(", ")}, and more. Time zones work; English is the working language.`,
   },
   {
-    title: "Build, ship, hand over",
-    body: "We implement, walk you through it, and stay until you can run the system without us.",
+    title: "Clear scope on day one",
+    body: "Written plans, fixed milestones where they fit, and honest tradeoffs. No mystery retainers before we understand the problem.",
   },
 ];
 
 export default function HomePage() {
   return (
-    <div className="site">
-      <header className="topbar">
-        <a className="brand-mark" href="/">
-          StepZero
-        </a>
-        <nav className="nav-links" aria-label="Primary">
-          <a href="#services">Services</a>
-          <a href="#process">Process</a>
-          <a href="#demo">Demo</a>
-          <a href="#book">Book</a>
-          <BookAppointment />
-        </nav>
-      </header>
-
-      <main>
-        <section className="hero" aria-label="Introduction">
-          <div className="hero__copy">
-            <h1>
-              Websites, automation, and tech help — without the runaround
-            </h1>
-            <p className="hero__statement">
-              StepZero helps you get online, automate busywork, and fix what
-              breaks. Clear scope. Straight answers. Work that ships.
-            </p>
-            <div className="hero__actions">
-              <BookAppointment label="Book an appointment" />
-            </div>
+    <main>
+      <section className="hero" aria-label="Introduction">
+        <div className="hero__copy">
+          <h1>Custom SaaS & software development from India</h1>
+          <p className="hero__statement">
+            StepZero designs and ships custom SaaS products, MVPs, automation,
+            and websites. Clear scope. Straight answers. Work that ships.
+          </p>
+          <div className="hero__actions">
+            <BookAppointment label="Book a call" />
+            <Link className="book-btn book-btn--ghost" href="/services">
+              View services
+            </Link>
           </div>
-          <figure className="hero__media">
-            <Image
-              src="/hero-utility-desk.png"
-              alt="Laptop and notebook on a clean desk — StepZero websites, automation, and tech help workspace"
-              width={1280}
-              height={720}
-              priority
-              sizes="(max-width: 860px) 100vw, 48vw"
-              style={{ width: "100%", height: "auto" }}
-            />
-          </figure>
-        </section>
-
-        <section
-          className="section"
-          id="services"
-          aria-labelledby="services-title"
-        >
-          <div className="section-meta">
-            <h2 id="services-title">
-              Website, automation, and tech services
-            </h2>
-            <p className="lede">
-              Practical work for people and businesses who need to be online,
-              save time, or get tech problems resolved.
-            </p>
-          </div>
-          <ol className="index-list">
-            {services.map((item) => (
-              <li key={item.title}>
-                <span className="idx" aria-hidden="true" />
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section
-          className="section"
-          id="process"
-          aria-labelledby="process-title"
-        >
-          <div className="section-meta">
-            <h2 id="process-title">How website and automation projects run</h2>
-            <p className="lede">
-              A short path from first message to something you can run without
-              us in the room.
-            </p>
-          </div>
-          <ol className="index-list">
-            {steps.map((item) => (
-              <li key={item.title}>
-                <span className="idx" aria-hidden="true" />
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <div id="demo">
-          <IntakeDemo />
         </div>
-
-        <section className="book-band" id="book" aria-labelledby="book-title">
-          <div>
-            <h2 id="book-title">Book an appointment</h2>
-            <p className="lede">
-              One tap opens WhatsApp when configured and starts an email to{" "}
-              {contact.email}. Tell us what you need and where you are stuck.
-              We reply with times.
-            </p>
-          </div>
-          <BookAppointment
-            className="book-btn--block"
-            label="Book an appointment"
+        <figure className="hero__media">
+          <Image
+            src="/hero-utility-desk.png"
+            alt="Laptop and notebook on a clean desk — StepZero custom SaaS and software development workspace"
+            width={1280}
+            height={720}
+            priority
+            sizes="(max-width: 860px) 100vw, 48vw"
+            style={{ width: "100%", height: "auto" }}
           />
-        </section>
+        </figure>
+      </section>
 
-        <section className="legal" id="terms" aria-labelledby="terms-title">
-          <h2 id="terms-title">Terms of service</h2>
-          <h3>Scope</h3>
-          <p>
-            StepZero provides strategy, design, web, and automation services
-            under written proposals. Work starts after both parties confirm
-            scope, timeline, and fees in writing.
+      <section className="section" aria-labelledby="pillars-title">
+        <div className="section-meta">
+          <h2 id="pillars-title">What we build</h2>
+          <p className="lede">
+            Custom software when off-the-shelf tools force workarounds. Product
+            thinking when you need more than a brochure site.
           </p>
-          <h3>Payment</h3>
-          <p>
-            Invoices are due as stated in the proposal. Late balances may pause
-            delivery until cleared. Third-party tools (hosting, messaging, ads)
-            are billed to the client unless noted otherwise.
-          </p>
-          <h3>IP</h3>
-          <p>
-            Finished deliverables transfer to the client after final payment.
-            StepZero may show anonymized process and outcomes in its portfolio
-            unless a written NDA says otherwise.
-          </p>
-          <h3>Limitation</h3>
-          <p>
-            We do not guarantee specific revenue outcomes. Results depend on
-            offer quality, operations, and demand outside our control.
-          </p>
-        </section>
+        </div>
+        <ol className="index-list">
+          {pillars.map((item) => (
+            <li key={item.href}>
+              <span className="idx" aria-hidden="true" />
+              <div>
+                <h3>
+                  <Link href={item.href}>{item.title}</Link>
+                </h3>
+                <p>{item.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-        <section className="legal" id="privacy" aria-labelledby="privacy-title">
-          <h2 id="privacy-title">Privacy policy</h2>
-          <h3>Data we collect</h3>
-          <p>
-            When you book via WhatsApp or email, we receive the message content,
-            your phone or email address, and basic metadata from those
-            providers. Site analytics, if enabled, use privacy-respecting
-            aggregate metrics.
+      <section className="section" aria-labelledby="why-title">
+        <div className="section-meta">
+          <h2 id="why-title">Why teams hire StepZero</h2>
+          <p className="lede">
+            Founders and operators who need a durable product — not another
+            agency deck — use us as their software partner.
           </p>
-          <h3>Use</h3>
-          <p>
-            Contact data is used only to reply, schedule, and deliver services.
-            We do not sell personal data.
-          </p>
-          <h3>Retention</h3>
-          <p>
-            Project records are kept for the duration of the engagement and for
-            lawful accounting needs afterward. You can request deletion of
-            non-required records by emailing {contact.email}.
-          </p>
-          <h3>Contact</h3>
-          <p>
-            Privacy questions: {contact.email}. Operator: StepZero, operating
-            from India, serving clients worldwide.
-          </p>
-        </section>
-      </main>
+        </div>
+        <ol className="index-list">
+          {why.map((item) => (
+            <li key={item.title}>
+              <span className="idx" aria-hidden="true" />
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-      <footer className="footer">
-        <p>© {new Date().getFullYear()} StepZero. All rights reserved.</p>
-        <p>
-          <a href="#terms">Terms</a>
-          {" / "}
-          <a href="#privacy">Privacy</a>
-          {" / "}
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      <section className="section" aria-labelledby="work-peek-title">
+        <div className="section-meta">
+          <h2 id="work-peek-title">Example engagements</h2>
+          <p className="lede">
+            Illustrative case studies that show how we scope custom SaaS, MVP
+            builds, and operational systems.
+          </p>
+        </div>
+        <ul className="cardless-list">
+          <li>
+            <Link href="/work/northside-clinic">
+              Northside Clinic — intake SaaS for multi-location care
+            </Link>
+          </li>
+          <li>
+            <Link href="/work/harbor-and-oak">
+              Harbor &amp; Oak — operations platform for a growing retailer
+            </Link>
+          </li>
+        </ul>
+        <p className="page-cta-line">
+          <Link href="/work">See all work →</Link>
         </p>
-      </footer>
-    </div>
+      </section>
+
+      <div id="demo">
+        <IntakeDemo />
+      </div>
+
+      <section className="book-band" id="book" aria-labelledby="book-title">
+        <div>
+          <h2 id="book-title">Ready to talk scope?</h2>
+          <p className="lede">
+            Tell us what you are building, who it is for, and where you are
+            stuck. We reply with times and a short plan of what to clarify
+            first. Legal:{" "}
+            <Link href="/terms">Terms</Link> · <Link href="/privacy">Privacy</Link>.
+          </p>
+        </div>
+        <BookAppointment className="book-btn--block" label="Book a call" />
+      </section>
+    </main>
   );
 }
