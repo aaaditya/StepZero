@@ -64,10 +64,10 @@ export function IntakeDemo() {
           >
             <label className="field">
               <span>What do you need help with?</span>
-              <select defaultValue="website" name="need">
+              <select defaultValue="software" name="need">
+                <option value="software">Custom software or SaaS</option>
                 <option value="website">A website</option>
                 <option value="automation">Automation / workflows</option>
-                <option value="brand">Brand and messaging</option>
                 <option value="fix">Something broken / tech help</option>
               </select>
             </label>

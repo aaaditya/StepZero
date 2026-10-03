@@ -1,6 +1,4 @@
-"use client";
-
-import { mailtoBookingUrl, whatsappBookingUrl } from "../lib/contact";
+import { BOOKING_URL, bookingCtaLabel } from "../lib/contact";
 
 type Props = {
   label?: string;
@@ -9,30 +7,23 @@ type Props = {
 };
 
 /**
- * Opens WhatsApp (when configured) and starts an email in parallel.
- * No hover motion theater. Instant feedback via :active only.
+ * Primary booking CTA. Target lives in BOOKING_URL so a calendar
+ * link can replace WhatsApp later without touching the UI.
  */
 export function BookAppointment({
-  label = "Book an appointment",
+  label = bookingCtaLabel,
   className = "",
   id,
 }: Props) {
-  function handleClick() {
-    const wa = whatsappBookingUrl();
-    if (wa) {
-      window.open(wa, "_blank", "noopener,noreferrer");
-    }
-    window.location.href = mailtoBookingUrl();
-  }
-
   return (
-    <button
+    <a
       id={id}
-      type="button"
-      onClick={handleClick}
+      href={BOOKING_URL}
       className={`book-btn ${className}`.trim()}
+      target="_blank"
+      rel="noopener noreferrer"
     >
       {label}
-    </button>
+    </a>
   );
 }

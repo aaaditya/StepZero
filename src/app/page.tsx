@@ -1,7 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { BookAppointment } from "../components/BookAppointment";
-import { contact } from "../lib/contact";
+import { SiteFooter } from "../components/SiteFooter";
+import { SiteHeader } from "../components/SiteHeader";
+import { WorkSection } from "../components/WorkSection";
+import { contact, emailUrl, whatsappUrl } from "../lib/contact";
 
 /** Defer intake demo JS — noncritical for first paint / SEO. */
 const IntakeDemo = dynamic(
@@ -21,16 +25,16 @@ const IntakeDemo = dynamic(
 
 const services = [
   {
+    title: "Custom software and SaaS",
+    body: "Products and internal tools built to your requirements, not a template. Web apps, portals, and systems you can run.",
+  },
+  {
     title: "Websites that work",
     body: "A clear site that explains what you do, answers the usual questions, and makes it easy to get in touch.",
   },
   {
     title: "Automation and workflows",
     body: "Forms, WhatsApp confirmations, intake routing, and follow-ups so busywork stops living in your head.",
-  },
-  {
-    title: "Brand that reads clearly",
-    body: "Name, message, and visuals that feel trustworthy online without looking like every other template.",
   },
   {
     title: "Hands-on tech help",
@@ -40,53 +44,43 @@ const services = [
 
 const steps = [
   {
-    title: "Tell us what you need",
-    body: "A short call or message. We map the problem, the urgency, and what is worth fixing first.",
+    title: "Free 15-min call",
+    body: "A short conversation about the problem and whether we can help.",
   },
   {
-    title: "Agree on a scoped plan",
-    body: "One written plan with deliverables and timing. No mystery retainers on day one.",
+    title: "Fixed-scope quote",
+    body: "One written scope with deliverables and timing. No open-ended retainers.",
   },
   {
-    title: "Build, ship, hand over",
-    body: "We implement, walk you through it, and stay until you can run the system without us.",
+    title: "Live in about 2 weeks",
+    body: "We build, launch, and hand over a working first version.",
   },
 ];
 
 export default function HomePage() {
   return (
     <div className="site">
-      <header className="topbar">
-        <a className="brand-mark" href="/">
-          StepZero
-        </a>
-        <nav className="nav-links" aria-label="Primary">
-          <a href="#services">Services</a>
-          <a href="#process">Process</a>
-          <a href="#demo">Demo</a>
-          <a href="#book">Book</a>
-          <BookAppointment />
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main>
         <section className="hero" aria-label="Introduction">
           <div className="hero__copy">
-            <h1>
-              Websites, automation, and tech help — without the runaround
-            </h1>
+            <h1>Custom software and SaaS</h1>
             <p className="hero__statement">
-              StepZero helps you get online, automate busywork, and fix what
-              breaks. Clear scope. Straight answers. Work that ships.
+              Built to your requirements, for clients in India and abroad, plus
+              products we run ourselves.
             </p>
             <div className="hero__actions">
-              <BookAppointment label="Book an appointment" />
+              <BookAppointment />
+              <Link className="book-btn book-btn--ghost" href="#work">
+                See selected work
+              </Link>
             </div>
           </div>
           <figure className="hero__media">
             <Image
               src="/hero-utility-desk.png"
-              alt="Laptop and notebook on a clean desk — StepZero websites, automation, and tech help workspace"
+              alt="Laptop and notebook on a clean desk. StepZero custom software workspace."
               width={1280}
               height={720}
               priority
@@ -96,28 +90,19 @@ export default function HomePage() {
           </figure>
         </section>
 
+        <WorkSection />
+
         <section
-          className="section"
-          id="services"
-          aria-labelledby="services-title"
+          className="how"
+          id="process"
+          aria-labelledby="process-title"
         >
-          <div className="section-meta">
-            <h2 id="services-title">
-              Website, automation, and tech services
-            </h2>
-            <p className="lede">
-              Practical work for people and businesses who need to be online,
-              save time, or get tech problems resolved.
-            </p>
-          </div>
-          <ol className="index-list">
-            {services.map((item) => (
+          <h2 id="process-title">How it works</h2>
+          <ol className="how-list">
+            {steps.map((item) => (
               <li key={item.title}>
-                <span className="idx" aria-hidden="true" />
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
-                </div>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
               </li>
             ))}
           </ol>
@@ -125,18 +110,18 @@ export default function HomePage() {
 
         <section
           className="section"
-          id="process"
-          aria-labelledby="process-title"
+          id="services"
+          aria-labelledby="services-title"
         >
           <div className="section-meta">
-            <h2 id="process-title">How website and automation projects run</h2>
+            <h2 id="services-title">What we build</h2>
             <p className="lede">
-              A short path from first message to something you can run without
-              us in the room.
+              Custom software first. Websites, automation, and tech help when
+              that is what the brief needs.
             </p>
           </div>
           <ol className="index-list">
-            {steps.map((item) => (
+            {services.map((item) => (
               <li key={item.title}>
                 <span className="idx" aria-hidden="true" />
                 <div>
@@ -154,26 +139,28 @@ export default function HomePage() {
 
         <section className="book-band" id="book" aria-labelledby="book-title">
           <div>
-            <h2 id="book-title">Book an appointment</h2>
+            <h2 id="book-title">Book a free 15-min call</h2>
             <p className="lede">
-              One tap opens WhatsApp when configured and starts an email to{" "}
-              {contact.email}. Tell us what you need and where you are stuck.
-              We reply with times.
+              WhatsApp or email. Tell us what you want built. We reply with
+              times.
+            </p>
+            <p className="contact-lines">
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                WhatsApp {contact.phoneDisplay}
+              </a>
+              <a href={emailUrl}>{contact.email}</a>
             </p>
           </div>
-          <BookAppointment
-            className="book-btn--block"
-            label="Book an appointment"
-          />
+          <BookAppointment className="book-btn--block" />
         </section>
 
         <section className="legal" id="terms" aria-labelledby="terms-title">
           <h2 id="terms-title">Terms of service</h2>
           <h3>Scope</h3>
           <p>
-            StepZero provides strategy, design, web, and automation services
-            under written proposals. Work starts after both parties confirm
-            scope, timeline, and fees in writing.
+            StepZero provides strategy, design, software, and automation
+            services under written proposals. Work starts after both parties
+            confirm scope and timeline in writing.
           </p>
           <h3>Payment</h3>
           <p>
@@ -222,16 +209,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="footer">
-        <p>© {new Date().getFullYear()} StepZero. All rights reserved.</p>
-        <p>
-          <a href="#terms">Terms</a>
-          {" / "}
-          <a href="#privacy">Privacy</a>
-          {" / "}
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
-        </p>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
+import { Fraunces, Source_Sans_3 } from "next/font/google";
 import { Analytics } from "../components/Analytics";
 import { JsonLd } from "../components/JsonLd";
 import "./globals.css";
 
-const display = Source_Serif_4({
+const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
@@ -12,8 +12,8 @@ const display = Source_Serif_4({
   adjustFontFallback: true,
 });
 
-const sans = IBM_Plex_Sans({
-  weight: ["400", "500", "600"],
+const sans = Source_Sans_3({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -21,9 +21,9 @@ const sans = IBM_Plex_Sans({
   adjustFontFallback: true,
 });
 
-const title = "StepZero | Websites, Automation & Tech Help";
+const title = "StepZero | Custom software and SaaS";
 const description =
-  "StepZero builds websites, sets up automation workflows, and provides hands-on tech help. Clear scope, straight answers, work that ships.";
+  "StepZero builds custom software and SaaS to each client's requirements, for clients in India and abroad. Clear scope, straight answers, work that ships.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://thestepzero.in"),
@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   description,
   keywords: [
     "StepZero",
+    "custom software",
+    "SaaS",
+    "software studio",
     "websites",
     "website design",
     "automation",
