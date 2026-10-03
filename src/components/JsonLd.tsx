@@ -1,14 +1,24 @@
 import { contact } from "../lib/contact";
 
+const telephone = `+${contact.whatsappE164}`;
+
 const organization = {
   "@type": "Organization",
   "@id": `${contact.siteUrl}/#organization`,
   name: "StepZero",
   url: contact.siteUrl,
   email: contact.email,
+  telephone,
   description:
-    "StepZero builds websites, automation workflows, and provides hands-on tech help.",
-  areaServed: "Worldwide",
+    "StepZero builds custom software and SaaS to each client's requirements, for clients in India and abroad.",
+  areaServed: ["India", "Worldwide"],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "sales",
+    email: contact.email,
+    telephone,
+    url: contact.siteUrl,
+  },
   sameAs: [] as string[],
 };
 
@@ -18,7 +28,7 @@ const website = {
   url: contact.siteUrl,
   name: "StepZero",
   description:
-    "Websites, automation, and tech help from StepZero — clear scope, straight answers.",
+    "Custom software and SaaS from StepZero. Built to your requirements. Clear scope, straight answers.",
   publisher: { "@id": `${contact.siteUrl}/#organization` },
   inLanguage: "en",
 };
@@ -29,11 +39,13 @@ const professionalService = {
   name: "StepZero",
   url: contact.siteUrl,
   email: contact.email,
+  telephone,
   description:
-    "Website design and development, business automation, and hands-on tech support.",
+    "Custom software and SaaS design and development, plus websites, automation, and hands-on tech support.",
   provider: { "@id": `${contact.siteUrl}/#organization` },
-  areaServed: "Worldwide",
+  areaServed: ["India", "Worldwide"],
   serviceType: [
+    "Custom software and SaaS development",
     "Website design and development",
     "Business automation and workflows",
     "Tech help and troubleshooting",
